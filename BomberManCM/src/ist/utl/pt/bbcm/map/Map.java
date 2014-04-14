@@ -33,7 +33,7 @@ public class Map {
 
 
 	private void createMap() {
-		String mapContent = LEVELS.LVL2.getMap();
+		String mapContent = LEVELS.LVL1.getMap();
 		String[] totalRows = mapContent.split("\n");
 		int numCols = totalRows.length;
 		int numRows = totalRows[0].length();
@@ -85,9 +85,9 @@ public class Map {
 	public void movePlayer(DIRECTION direction){
 		int posMatrixX = player1.getMatrixX();
 		int posMatrixY = player1.getMatrixY();
-		int posNextMatrixX = player1.getMatrixY() + direction.y;
+		int posNextMatrixX = player1.getMatrixX() + direction.x;
 		int posNextMatrixY = player1.getMatrixY() + direction.y;
-		if(this.posIsFree(posMatrixX, posMatrixY)){
+		if(this.posIsFree(posNextMatrixX, posNextMatrixY)){
 			player1.move(direction);
 			this.updateMatrix(posMatrixX, posMatrixY, posNextMatrixX, posNextMatrixY);
 		}
@@ -98,7 +98,7 @@ public class Map {
 		int y = j ;
 		try{
 			Log.w("DebugNEXTposCHAR","x: "+ x +"  y: "+ y + "    char: "+ mapMatrix[x][y] );
-			if(mapMatrix[x][y] == '-')	
+			if(mapMatrix[x][y] != 'W')	
 				return true;
 			else
 				return false;
