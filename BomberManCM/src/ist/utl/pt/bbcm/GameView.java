@@ -18,7 +18,7 @@ public class GameView extends SurfaceView {
           super(context);
           gameLoopThread = new GameLoopThread(this);
           holder = getHolder();
-          holder.setFixedSize(32*19, 32*13);
+          //holder.setFixedSize(32*19, 32*13);
           addHolderCallback();
           map = new Map(this);
     }

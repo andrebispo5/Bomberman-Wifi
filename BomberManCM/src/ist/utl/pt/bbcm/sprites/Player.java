@@ -30,8 +30,8 @@ public class Player implements Sprite {
 
 	public Player(GameView gameView,int image, int x, int y) {
     	this.bmp = BitmapFactory.decodeResource(gameView.getResources(), image);
-    	this.x = x;
-    	this.y = y;
+    	this.setX(x);
+    	this.setY(y);
         this.width = bmp.getWidth() /BMP_COLUMNS;
         this.height = bmp.getHeight()/BMP_ROWS ;
         this.xSpeed = 0;
@@ -48,8 +48,9 @@ public class Player implements Sprite {
 			int srcX = currentFrame * width;
 			int srcY = getAnimationRow() * height;
 			Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
-			Rect dst = new Rect(x, y, x + width, y + height);
+			Rect dst = new Rect(getX(), getY(), getX() + width, getY() + height);
 			canvas.drawBitmap(bmp, src, dst, null);
+			
 		}
 	}
 
@@ -65,9 +66,9 @@ public class Player implements Sprite {
 	
 	private void updateSprite() {
 		if (numSteps > 0) {
-			x = x + xSpeed;
+			setX(getX() + xSpeed);
 			numSteps -= Math.abs(xSpeed);
-			y = y + ySpeed;
+			setY(getY() + ySpeed);
 			numSteps -= Math.abs(ySpeed);
 			currentFrame = ++currentFrame % BMP_COLUMNS;
 		}
@@ -92,11 +93,11 @@ public class Player implements Sprite {
 	}
 
 	public int getMatrixX() {
-		return this.x/CELL_SPACING;
+		return this.getX()/CELL_SPACING;
 	}
 
 	public int getMatrixY() {
-		return this.y/CELL_SPACING;
+		return this.getY()/CELL_SPACING;
 	}
 	
 	public void kill(){
@@ -107,6 +108,26 @@ public class Player implements Sprite {
 	public void spawn(){
 		this.isAlive = true;
 		this.startDrawing();
+	}
+
+
+	public int getX() {
+		return x;
+	}
+
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+
+	public int getY() {
+		return y;
+	}
+
+
+	public void setY(int y) {
+		this.y = y;
 	}
 
 

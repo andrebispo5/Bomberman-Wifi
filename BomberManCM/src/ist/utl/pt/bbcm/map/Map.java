@@ -68,6 +68,10 @@ public class Map {
 
 	
 	public void drawToCanvas(Canvas canvas) {
+		canvas.scale(1.5f, 1.5f);
+		canvas.translate(-player1.getX(), -player1.getY());
+		canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
+		
 		for(Sprite cell : walls){
 			cell.drawToCanvas(canvas);
 		}
@@ -77,6 +81,7 @@ public class Map {
 		for(Sprite cell : obstacles){
 			cell.drawToCanvas(canvas);
 		}
+		
 		player1.drawToCanvas(canvas);
 		player2.drawToCanvas(canvas);
 		player3.drawToCanvas(canvas);
