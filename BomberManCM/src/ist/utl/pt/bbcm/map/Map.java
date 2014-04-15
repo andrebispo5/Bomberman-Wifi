@@ -23,7 +23,9 @@ public class Map {
     private Player player1;
     private Player player2;
     private Player player3;
-	private char[][] mapMatrix; 
+	private char[][] mapMatrix;
+	private int camWidth;
+	private int camHeight;
     
 	public Map(GameView gameView) {
 		super();
@@ -38,7 +40,6 @@ public class Map {
 		int numCols = totalRows.length;
 		int numRows = totalRows[0].length();
 		mapMatrix = new char[numRows][numCols];
-		
 		for(int col=0; col < totalRows.length; col++){
 			String rowContent = totalRows[col];
 			for(int row=0; row < rowContent.length(); row++){
@@ -69,9 +70,34 @@ public class Map {
 	
 	public void drawToCanvas(Canvas canvas) {
 		canvas.scale(1.5f, 1.5f);
-		canvas.translate(-player1.getX(), -player1.getY());
-		canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
+		if(player1.getX()<canvas.getWidth() && player1.getX()>canvas.getWidth()/4 + 16){
+			this.camWidth=player1.getX()+20;
+			this.camHeight=player1.getY()+20;
+			canvas.translate(-player1.getX(), -player1.getY());
+			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
+			Log.w("DebugPlayerPosition","x:" + player1.getX() + " y:" + player1.getY() );
+			
+		}
+		else if(player1.getX() >= canvas.getWidth()){
+			canvas.translate(-camWidth, -player1.getY());
+			canvas.translate((canvas.getWidth()/3)-12,(canvas.getHeight()/3)-16);
+			Log.w("DebugPlayerPositionIF1","x:" + player1.getX() + " y:" + player1.getY() );
+			
+		}
 		
+		else if(player1.getX() <= canvas.getWidth()/4 + 16){
+			canvas.translate(-camWidth, -player1.getY());
+			canvas.translate((canvas.getWidth()/3)+4,(canvas.getHeight()/3)-16);
+			Log.w("DebugPlayerPositionIF1","x:" + player1.getX() + " y:" + player1.getY() );
+			
+		}
+		/*
+		else if(player1.getY() >= (canvas.getHeight()/2)+32){
+			canvas.translate(-player1.getX(), -camHeight);
+			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
+			Log.w("DebugPlayerPositionIF2","x:" + player1.getX() + " y:" + player1.getY() );
+			Log.w("DebugPlayerPositionIF2","" + canvas.getHeight()/2 );
+		}*/
 		for(Sprite cell : walls){
 			cell.drawToCanvas(canvas);
 		}
@@ -102,7 +128,7 @@ public class Map {
 		int x = i ;
 		int y = j ;
 		try{
-			Log.w("DebugNEXTposCHAR","x: "+ x +"  y: "+ y + "    char: "+ mapMatrix[x][y] );
+			//Log.w("DebugNEXTposCHAR","x: "+ x +"  y: "+ y + "    char: "+ mapMatrix[x][y] );
 			if(mapMatrix[x][y] != 'W')	
 				return true;
 			else
