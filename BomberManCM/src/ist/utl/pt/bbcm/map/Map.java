@@ -70,7 +70,7 @@ public class Map {
 	
 	public void drawToCanvas(Canvas canvas) {
 		canvas.scale(1.5f, 1.5f);
-		if(player1.getX()<canvas.getWidth() && player1.getX()>canvas.getWidth()/4 + 16){
+		if(player1.getX()<canvas.getWidth() && player1.getX()>canvas.getWidth()/4 + 16 && player1.getY()>canvas.getHeight()/4 +16 && player1.getY()<canvas.getHeight()/2 +32){
 			this.camWidth=player1.getX()+20;
 			this.camHeight=player1.getY()+20;
 			canvas.translate(-player1.getX(), -player1.getY());
@@ -80,7 +80,7 @@ public class Map {
 		}
 		else if(player1.getX() >= canvas.getWidth()){
 			canvas.translate(-camWidth, -player1.getY());
-			canvas.translate((canvas.getWidth()/3)-12,(canvas.getHeight()/3)-16);
+			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
 			Log.w("DebugPlayerPositionIF1","x:" + player1.getX() + " y:" + player1.getY() );
 			
 		}
@@ -90,6 +90,14 @@ public class Map {
 			canvas.translate((canvas.getWidth()/3)+4,(canvas.getHeight()/3)-16);
 			Log.w("DebugPlayerPositionIF1","x:" + player1.getX() + " y:" + player1.getY() );
 			
+		}
+		else if(player1.getY()<=canvas.getHeight()/4 +16){
+			canvas.translate(-player1.getX(), -camHeight);
+			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)+4);
+		}
+		else if(player1.getY()>=canvas.getHeight()/2 +32){
+			canvas.translate(-player1.getX(), -camHeight);
+			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)+4);
 		}
 		/*
 		else if(player1.getY() >= (canvas.getHeight()/2)+32){
