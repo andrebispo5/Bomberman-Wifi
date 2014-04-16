@@ -105,5 +105,12 @@ public class Robot implements Sprite {
 	public void spawn(){
 		this.isAlive = false;
 		this.startDrawing();
+	}
+
+	public boolean canMove() {
+		if (numSteps==0)
+			return true;
+		else
+			return false;
 	}	
 }

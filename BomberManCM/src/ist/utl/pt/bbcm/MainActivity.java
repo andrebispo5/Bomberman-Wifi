@@ -60,5 +60,13 @@ public class MainActivity extends Activity {
 				newGame.movePlayer(DIRECTION.RIGHT);
 			}
 		});
+		
+		Button bombBtn = (Button) findViewById(R.id.bombBtn);
+		bombBtn.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				newGame.placeBomb();
+			}
+		});
 	}
 }

@@ -14,7 +14,12 @@ public class GameView extends SurfaceView {
     private GameLoopThread gameLoopThread;
 	private Map map;
 	
-    public GameView(Context context) {
+    public Map getMap() {
+		return map;
+	}
+
+
+	public GameView(Context context) {
           super(context);
           gameLoopThread = new GameLoopThread(this);
           holder = getHolder();
@@ -66,6 +71,11 @@ public class GameView extends SurfaceView {
 
 	public void moveRobots() {
 		map.moveRobots();
+	}
+
+
+	public void placeBomb() {
+		map.placeBomb();
 	}
 
 }

@@ -131,4 +131,12 @@ public class Player implements Sprite {
 	}
 
 
+	public boolean canMove() {
+		if (numSteps==0)
+			return true;
+		else
+			return false;
+	}
+
+
 }
