@@ -1,53 +1,44 @@
 package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
-import ist.utl.pt.bbcm.R;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-public class Wall implements Sprite {
+public class EmptySpace implements Sprite {
+	
+	
 
-	private Bitmap bmp;
 	private int x;
 	private int y;
-	private boolean needsDrawing;
-	
 
-	public Wall(GameView gameView, int x, int y) {
-		this.bmp = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.wall);;
+	public EmptySpace(GameView gameView, int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.needsDrawing = true;
-	}
-	
-	
-	public void drawToCanvas(Canvas canvas) {
-		if(needsDrawing){
-			canvas.drawBitmap(bmp, x, y, null);
-		}
-	}
-	
-	public void stopDrawing (){
-		this.needsDrawing = false;
-	}
-	
-	@Override
-	public void startDrawing() {
-		this.needsDrawing = true;
-	}
-	
-	@Override 
-	public String toString(){
-		return "W";
 	}
 
+	@Override
+	public void drawToCanvas(Canvas canvas) {
+
+	}
+
+	@Override
+	public void stopDrawing() {
+
+	}
+
+	@Override
+	public void startDrawing() {
+
+	}
+	@Override 
+	public String toString(){
+		return "-";
+	}
 
 	@Override
 	public boolean isWalkable() {
-		return false;
+		return true;
 	}
-	
+
 	@Override
 	public int getX() {
 		return x;
@@ -62,13 +53,11 @@ public class Wall implements Sprite {
 	public void moveRandom() {		
 	}
 
-
 	@Override
 	public boolean isKillable() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 
 	@Override
 	public void kill() {

@@ -69,8 +69,8 @@ public class GameView extends SurfaceView {
     }
 
 
-	public void moveRobots() {
-		map.moveRobots();
+	public void moveObjects() {
+		map.moveObjects();
 	}
 
 

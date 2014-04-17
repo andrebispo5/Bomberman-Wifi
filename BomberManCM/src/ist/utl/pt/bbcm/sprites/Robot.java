@@ -26,8 +26,10 @@ public class Robot implements Sprite {
 	private int ySpeed;
 	private boolean needsDrawing;
 	private boolean isAlive;
+	private GameView gameView;
 	
 	public Robot(GameView gameView, int x, int y) {
+		this.gameView = gameView;
     	this.bmp = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.robot);
     	this.x = x;
     	this.y = y;
@@ -61,13 +63,21 @@ public class Robot implements Sprite {
 		this.needsDrawing = true;
 	}
 	
-	public void move(DIRECTION direction) {
-		int tmpx = direction.x * CELL_SPACING/8;
-		int tmpy = direction.y * CELL_SPACING/8;
-		if (numSteps == 0) {
-			numSteps = CELL_SPACING;
-			xSpeed = tmpx;
-			ySpeed = tmpy;
+	public void moveRandom() {
+		DIRECTION direction = DIRECTION.randomDir();
+		int posMatrixX = this.getMatrixX();
+		int posMatrixY = this.getMatrixY();
+		int posNextMatrixX = this.getMatrixX() + direction.x;
+		int posNextMatrixY = this.getMatrixY() + direction.y;
+		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY) && this.canMove()){
+			int tmpx = direction.x * CELL_SPACING/8;
+			int tmpy = direction.y * CELL_SPACING/8;
+			gameView.getMap().updateMatrix(this,posMatrixX,posMatrixY, posNextMatrixX, posNextMatrixY);
+			if (numSteps == 0) {
+				numSteps = CELL_SPACING;
+				xSpeed = tmpx;
+				ySpeed = tmpy;
+			}
 		}
 	}
 	
@@ -100,6 +110,8 @@ public class Robot implements Sprite {
 	public void kill(){
 		this.isAlive = false;
 		this.stopDrawing();
+		Sprite[][] matrix = gameView.getMap().getMapMatrix();
+		matrix[x/32][y/32] = new EmptySpace(gameView,0,0);
 	}
 	
 	public void spawn(){
@@ -113,4 +125,30 @@ public class Robot implements Sprite {
 		else
 			return false;
 	}	
+	
+	@Override 
+	public String toString(){
+		return "R";
+	}
+
+	@Override
+	public boolean isWalkable() {
+		return false;
+	}
+	
+	@Override
+	public int getX() {
+		return x;
+	}
+
+	@Override
+	public int getY() {
+		return y;
+	}
+
+	@Override
+	public boolean isKillable() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

@@ -26,9 +26,11 @@ public class Player implements Sprite {
 	private int ySpeed;
 	private boolean needsDrawing;
 	private boolean isAlive;
+	private GameView gameView;
 
 
 	public Player(GameView gameView,int image, int x, int y) {
+		this.gameView = gameView;
     	this.bmp = BitmapFactory.decodeResource(gameView.getResources(), image);
     	this.setX(x);
     	this.setY(y);
@@ -75,12 +77,16 @@ public class Player implements Sprite {
 	}
 	
 	public void move(DIRECTION direction) {
-		int tmpx = direction.x * CELL_SPACING/8;
-		int tmpy = direction.y * CELL_SPACING/8;
-		if (numSteps == 0) {
-			numSteps = CELL_SPACING;
-			xSpeed = tmpx;
-			ySpeed = tmpy;
+		int posNextMatrixX = this.getMatrixX() + direction.x;
+		int posNextMatrixY = this.getMatrixY() + direction.y;
+		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY) && this.canMove()){
+			int tmpx = direction.x * CELL_SPACING/8;
+			int tmpy = direction.y * CELL_SPACING/8;
+			if (numSteps == 0) {
+				numSteps = CELL_SPACING;
+				xSpeed = tmpx;
+				ySpeed = tmpy;
+			}
 		}
 	}
 	
@@ -137,6 +143,29 @@ public class Player implements Sprite {
 		else
 			return false;
 	}
+	
+	@Override 
+	public String toString(){
+		return "P";
+	}
 
+
+	@Override
+	public boolean isWalkable() {
+		return true;
+	}
+
+
+	@Override
+	public void moveRandom() {
+		//Player has no random movement
+	}
+
+
+	@Override
+	public boolean isKillable() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 }

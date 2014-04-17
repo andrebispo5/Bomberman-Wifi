@@ -27,7 +27,7 @@ public class GameLoopThread extends Thread{
                          c = view.getHolder().lockCanvas();
                          synchronized (view.getHolder()) {
                                 view.drawToCanvas(c);
-                                view.moveRobots();
+                                view.moveObjects();
                          }
                   } finally {
                          if (c != null) {
