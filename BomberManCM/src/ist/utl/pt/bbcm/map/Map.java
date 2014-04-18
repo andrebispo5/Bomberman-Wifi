@@ -93,6 +93,7 @@ public class Map {
 				mapMatrix[row][col].drawToCanvas(canvas);
 			}
 		}
+		gameView.refreshHUD(player1.getScore());
 		//DEBUUUUUUUUUG!!!
 		//DEBUGPRINTMATRIX(canvas);
 	}
@@ -174,7 +175,7 @@ public class Map {
 		int playerX = player1.getX();
 		int playerY = player1.getY();
 		if(mapMatrix[playerMatrixX][playerMatrixY] instanceof Walkable && player1.canMove()){
-			mapMatrix[playerMatrixX][playerMatrixY] = new Bomb(gameView,playerX,playerY);
+			mapMatrix[playerMatrixX][playerMatrixY] = new Bomb(gameView,playerX,playerY,player1);
 		}
 	}
 	

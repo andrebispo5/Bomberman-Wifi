@@ -4,19 +4,25 @@ package ist.utl.pt.bbcm;
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ContentValues;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
+	
+	public TextView tvScore;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		tvScore = (TextView) findViewById(R.id.scoreTxt);
 		LinearLayout gameLayout = (LinearLayout)findViewById(R.id.gameFrame);
-		GameView newGame = new GameView(this);
+		GameView newGame = new GameView(this,this);
 		gameLayout.addView(newGame);
 		initButtons();
 	}
@@ -69,4 +75,14 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
+	
+	public void setVal(final int val){
+		runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+		    	 tvScore.setText("Score:" + val);
+		    }
+		});
+		
+	 }
 }

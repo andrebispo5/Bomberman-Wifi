@@ -22,13 +22,15 @@ public class Bomb implements Sprite {
 	private boolean needsDrawing;
 	public boolean exploded;
 	private GameView gameView;
+	private Player bombOwner;
 
-	public Bomb(GameView gameView, int x, int y) {
+	public Bomb(GameView gameView, int x, int y, Player bombOwner) {
 		this.gameView = gameView;
 		this.bmp = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.bomb);;
 		this.x = x;
 		this.y = y;
 		this.needsDrawing = true;
+		this.bombOwner=bombOwner;
 		new CountDownTimer(4000, 1000) {
 		     public void onTick(long millisUntilFinished) {}
 		     public void onFinish() {stopDrawing();}
@@ -51,11 +53,13 @@ public class Bomb implements Sprite {
 	private void explode() {
 		Map map = gameView.getMap();
 		Sprite[][] mapMatrix = map.getMapMatrix();
+		int score = 0;
 		for(DIRECTION dir : DIRECTION.values()){
 			int posNextMatrixX = this.getMatrixX() + dir.x;
 			int posNextMatrixY = this.getMatrixY() + dir.y;
 			Object adjObj = mapMatrix[posNextMatrixX][posNextMatrixY];
 			if(adjObj instanceof Killable){
+				score+=((Killable) adjObj).getLoot();
 				((Killable)adjObj).kill();
 				mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x, y + 32*dir.y);
 			}
@@ -64,6 +68,7 @@ public class Bomb implements Sprite {
 			}
 		}
 		mapMatrix[this.getMatrixX()][this.getMatrixY()] = new Explosion(gameView, x, y);
+		bombOwner.updateScore(score);
 	}
 
 

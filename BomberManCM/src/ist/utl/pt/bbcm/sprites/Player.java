@@ -33,6 +33,10 @@ public class Player implements Sprite, Killable, Moveable {
 	private boolean needsDrawing;
 	private boolean isAlive;
 	private GameView gameView;
+	private int score;
+
+
+	
 
 
 	public Player(GameView gameView,int image, int x, int y) {
@@ -46,6 +50,7 @@ public class Player implements Sprite, Killable, Moveable {
         this.ySpeed = 0;
         this.needsDrawing = true;
         this.isAlive = false;
+        this.score=10;
 	}
 
 
@@ -163,6 +168,15 @@ public class Player implements Sprite, Killable, Moveable {
 	@Override
 	public int getLoot() {
 		return 10;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+
+
+	public void updateScore(int score) {
+		this.score += score;
 	}
 
 
