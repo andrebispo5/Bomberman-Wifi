@@ -8,11 +8,11 @@ import android.graphics.Color;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-
 public class GameView extends SurfaceView {
     private SurfaceHolder holder;
     private GameLoopThread gameLoopThread;
 	private Map map;
+	public float scaleDen;
 	
     public Map getMap() {
 		return map;
@@ -21,6 +21,7 @@ public class GameView extends SurfaceView {
 
 	public GameView(Context context) {
           super(context);
+          scaleDen = getResources().getDisplayMetrics().density;
           gameLoopThread = new GameLoopThread(this);
           holder = getHolder();
           //holder.setFixedSize(32*19, 32*13);
@@ -60,8 +61,8 @@ public class GameView extends SurfaceView {
 
     
 	protected void drawToCanvas(Canvas canvas) {
-          canvas.drawColor(Color.rgb(0, 100, 30));
-          map.drawToCanvas(canvas);
+        canvas.drawColor(Color.BLACK);
+        map.drawToCanvas(canvas);
     }
     
     public void movePlayer(DIRECTION direction){

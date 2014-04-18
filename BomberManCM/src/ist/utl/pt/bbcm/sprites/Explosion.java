@@ -2,11 +2,11 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.CountDownTimer;
-import android.util.Log;
 
 public class Explosion implements Sprite {
 
@@ -39,7 +39,7 @@ public class Explosion implements Sprite {
 	@Override
 	public void stopDrawing() {
 		this.needsDrawing = false;
-		this.kill();
+		this.clean();
 	}
 
 	@Override
@@ -47,11 +47,6 @@ public class Explosion implements Sprite {
 		this.needsDrawing = true;
 	}
 
-	@Override
-	public boolean isWalkable() {
-		// TODO Auto-generated method stub
-		return true;
-	}
 
 	@Override
 	public int getX() {
@@ -65,20 +60,8 @@ public class Explosion implements Sprite {
 		return y;
 	}
 
-	@Override
-	public void moveRandom() {
-		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public boolean isKillable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void kill() {
+	public void clean() {
 		Sprite[][] matrix = gameView.getMap().getMapMatrix();
 		matrix[x/32][y/32] = new EmptySpace(gameView,0,0);
 	}

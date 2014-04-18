@@ -3,6 +3,9 @@ package ist.utl.pt.bbcm.sprites;
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
 import ist.utl.pt.bbcm.map.Map;
+import ist.utl.pt.bbcm.sprites.interfaces.Killable;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
+import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -51,10 +54,12 @@ public class Bomb implements Sprite {
 		for(DIRECTION dir : DIRECTION.values()){
 			int posNextMatrixX = this.getMatrixX() + dir.x;
 			int posNextMatrixY = this.getMatrixY() + dir.y;
-			if(mapMatrix[posNextMatrixX][posNextMatrixY].isKillable()){
-				mapMatrix[posNextMatrixX][posNextMatrixY].kill();
+			Object adjObj = mapMatrix[posNextMatrixX][posNextMatrixY];
+			if(adjObj instanceof Killable){
+				((Killable)adjObj).kill();
+				mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x, y + 32*dir.y);
 			}
-			if(mapMatrix[posNextMatrixX][posNextMatrixY].isKillable()||mapMatrix[posNextMatrixX][posNextMatrixY].isWalkable()){
+			if(adjObj instanceof Walkable){
 				mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x, y + 32*dir.y);
 			}
 		}
@@ -89,29 +94,4 @@ public class Bomb implements Sprite {
 		return "B";
 	}
 
-
-	@Override
-	public boolean isWalkable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void moveRandom() {		
-	}
-
-
-	@Override
-	public boolean isKillable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void kill() {
-		// TODO Auto-generated method stub
-		
-	}
 }

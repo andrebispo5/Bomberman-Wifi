@@ -1,12 +1,12 @@
 package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
+import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
 import android.graphics.Canvas;
 
-public class EmptySpace implements Sprite {
+public class EmptySpace implements Sprite, Walkable {
 	
-	
-
 	private int x;
 	private int y;
 
@@ -35,11 +35,6 @@ public class EmptySpace implements Sprite {
 	}
 
 	@Override
-	public boolean isWalkable() {
-		return true;
-	}
-
-	@Override
 	public int getX() {
 		return x;
 	}
@@ -49,19 +44,4 @@ public class EmptySpace implements Sprite {
 		return y;
 	}
 	
-	@Override
-	public void moveRandom() {		
-	}
-
-	@Override
-	public boolean isKillable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void kill() {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -2,6 +2,7 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -42,12 +43,6 @@ public class Wall implements Sprite {
 		return "W";
 	}
 
-
-	@Override
-	public boolean isWalkable() {
-		return false;
-	}
-	
 	@Override
 	public int getX() {
 		return x;
@@ -58,21 +53,4 @@ public class Wall implements Sprite {
 		return y;
 	}
 	
-	@Override
-	public void moveRandom() {		
-	}
-
-
-	@Override
-	public boolean isKillable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public void kill() {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -2,12 +2,18 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.sprites.interfaces.Killable;
+import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
-public class Player implements Sprite {
+public class Player implements Sprite, Killable, Moveable {
 	
 	// direction = 0 up, 1 left, 2 down, 3 right,
 	// animation = 3 back, 1 left, 0 front, 2 right
@@ -19,8 +25,8 @@ public class Player implements Sprite {
 	private int currentFrame = 0;
 	private int x = 0;
 	private int y = 0;
-	private int width;
-	private int height;
+	public int width;
+	public int height;
 	private int numSteps;
 	private int xSpeed;
 	private int ySpeed;
@@ -52,7 +58,11 @@ public class Player implements Sprite {
 			Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 			Rect dst = new Rect(getX(), getY(), getX() + width, getY() + height);
 			canvas.drawBitmap(bmp, src, dst, null);
-			
+			Log.w("DEBUGPOS", String.format("%d , %d", x,y));
+			Paint paint = new Paint();  
+			paint.setColor(Color.WHITE); 
+			paint.setTextSize(8); 
+			canvas.drawText(String.format("%d , %d", x,y), x, y+16, paint);
 		}
 	}
 
@@ -76,6 +86,7 @@ public class Player implements Sprite {
 		}
 	}
 	
+	@Override
 	public void move(DIRECTION direction) {
 		int posNextMatrixX = this.getMatrixX() + direction.x;
 		int posNextMatrixY = this.getMatrixY() + direction.y;
@@ -149,23 +160,16 @@ public class Player implements Sprite {
 		return "P";
 	}
 
-
 	@Override
-	public boolean isWalkable() {
-		return true;
+	public int getLoot() {
+		return 10;
 	}
 
 
 	@Override
 	public void moveRandom() {
-		//Player has no random movement
-	}
-
-
-	@Override
-	public boolean isKillable() {
 		// TODO Auto-generated method stub
-		return true;
+		
 	}
 
 }

@@ -3,12 +3,15 @@ package ist.utl.pt.bbcm.sprites;
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.sprites.interfaces.Killable;
+import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-public class Robot implements Sprite {
+public class Robot implements Sprite , Killable, Moveable{
 	// direction = 0 up, 1 left, 2 down, 3 right,
 	// animation = 3 back, 1 left, 0 front, 2 right
 	private static final int CELL_SPACING = 32;
@@ -63,6 +66,7 @@ public class Robot implements Sprite {
 		this.needsDrawing = true;
 	}
 	
+	@Override
 	public void moveRandom() {
 		DIRECTION direction = DIRECTION.randomDir();
 		int posMatrixX = this.getMatrixX();
@@ -130,11 +134,6 @@ public class Robot implements Sprite {
 	public String toString(){
 		return "R";
 	}
-
-	@Override
-	public boolean isWalkable() {
-		return false;
-	}
 	
 	@Override
 	public int getX() {
@@ -146,9 +145,15 @@ public class Robot implements Sprite {
 		return y;
 	}
 
+
 	@Override
-	public boolean isKillable() {
+	public int getLoot() {
+		return 5;
+	}
+
+	@Override
+	public void move(DIRECTION dir) {
 		// TODO Auto-generated method stub
-		return true;
+		
 	}
 }

@@ -9,9 +9,10 @@ import ist.utl.pt.bbcm.sprites.EmptySpace;
 import ist.utl.pt.bbcm.sprites.Obstacle;
 import ist.utl.pt.bbcm.sprites.Player;
 import ist.utl.pt.bbcm.sprites.Robot;
-import ist.utl.pt.bbcm.sprites.Sprite;
+import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
+import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
 import ist.utl.pt.bbcm.sprites.Wall;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,15 +22,13 @@ import android.util.Log;
 public class Map {
     private GameView gameView;
     private Player player1;
-    private Player player2;
-    private Player player3;
+//    private Player player2;
+//    private Player player3;
 	private Sprite[][] mapMatrix;
-	public Sprite[][] getMapMatrix() {
-		return mapMatrix;
-	}
-
-	private int camWidth;
-	private int camHeight;
+	private int mapWidth;
+	private int mapHeight;
+	private int lastTransX;
+	private int lastTransY;
     
 	public Map(GameView gameView) {
 		super();
@@ -37,12 +36,17 @@ public class Map {
         this.createMap();
 	}
 
+	public Sprite[][] getMapMatrix() {
+		return mapMatrix;
+	}
 
 	private void createMap() {
 		String mapContent = LEVELS.LVL1.getMap();
 		String[] totalRows = mapContent.split("\n");
 		int numCols = totalRows.length;
 		int numRows = totalRows[0].length();
+		mapWidth = numRows*32;
+		mapHeight = numCols*32;
 		mapMatrix = new Sprite[numRows][numCols];
 		for(int col=0; col < totalRows.length; col++){
 			String rowContent = totalRows[col];
@@ -62,20 +66,27 @@ public class Map {
 					mapMatrix[row][col] = new EmptySpace(gameView,32*row,32*col);
 					player1.spawn();
 				}else if(cell=='2'){
-					player2 = new Player(gameView,R.drawable.player2,32*row,32*col);
+//					player2 = new Player(gameView,R.drawable.player2,32*row,32*col);
 					mapMatrix[row][col] = new EmptySpace(gameView,32*row,32*col);
 				}else if(cell=='3'){
-					player3 = new Player(gameView,R.drawable.player3,32*row,32*col);
+//					player3 = new Player(gameView,R.drawable.player3,32*row,32*col);
 					mapMatrix[row][col] = new EmptySpace(gameView,32*row,32*col);
 				}
 			}
 		}
+
+		lastTransX = player1.getX()+player1.width/2;
+		lastTransY = player1.getY()+player1.height/2;
 	}
 
 
 	
 	public void drawToCanvas(Canvas canvas) {
+		int backgroundGreen = Color.rgb(0, 100, 30);
+		Paint paint = new Paint();  
+		paint.setColor(backgroundGreen); 
 		moveCamera(canvas);
+		canvas.drawRect(0, 0, mapWidth, mapHeight, paint);
 		player1.drawToCanvas(canvas);
 		for(int col=0; col < mapMatrix[0].length; col++){
 			for(int row=0; row < mapMatrix.length; row++){
@@ -83,48 +94,27 @@ public class Map {
 			}
 		}
 		//DEBUUUUUUUUUG!!!
-		DEBUGPRINTMATRIX(canvas);
+		//DEBUGPRINTMATRIX(canvas);
 	}
 
 
 	private void moveCamera(Canvas canvas) {
-		canvas.scale(1.5f, 1.5f);
-		if(player1.getX()<canvas.getWidth() && player1.getX()>canvas.getWidth()/4 + 16 && player1.getY()>canvas.getHeight()/4 +16 && player1.getY()<canvas.getHeight()/2 +32){
-			this.camWidth=player1.getX()+20;
-			this.camHeight=player1.getY()+20;
-			canvas.translate(-player1.getX(), -player1.getY());
-			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
-			Log.w("DebugPlayerPosition","x:" + player1.getX() + " y:" + player1.getY() );
-			
+		float scaleDensity = gameView.scaleDen;
+		int transX = player1.getX()+player1.width/2;
+		int transY = player1.getY()+player1.height/2;
+		int minX = (int) (canvas.getWidth()/(2*scaleDensity));
+		int minY = (int) (canvas.getHeight()/(2*scaleDensity))-2;
+		int limitX = (int) (mapWidth-canvas.getWidth()/(2*scaleDensity));
+		int limitY = (int) (mapHeight-canvas.getWidth()/(2*scaleDensity))-2;
+		canvas.translate(canvas.getWidth()/2,canvas.getHeight()/2);
+		canvas.scale(scaleDensity , scaleDensity);
+		if(transX >= minX && transX <= limitX){
+			lastTransX = transX;
 		}
-		else if(player1.getX() >= canvas.getWidth()){
-			canvas.translate(-camWidth, -player1.getY());
-			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
-			Log.w("DebugPlayerPositionIF1","x:" + player1.getX() + " y:" + player1.getY() );
-			
+		if(transY >= minY && transY <= limitY){
+			lastTransY = transY;
 		}
-		
-		else if(player1.getX() <= canvas.getWidth()/4 + 16){
-			canvas.translate(-camWidth, -player1.getY());
-			canvas.translate((canvas.getWidth()/3)+4,(canvas.getHeight()/3)-16);
-			Log.w("DebugPlayerPositionIF1","x:" + player1.getX() + " y:" + player1.getY() );
-			
-		}
-		else if(player1.getY()<=canvas.getHeight()/4 +16){
-			canvas.translate(-player1.getX(), -camHeight);
-			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)+4);
-		}
-		else if(player1.getY()>=canvas.getHeight()/2 +32){
-			canvas.translate(-player1.getX(), -camHeight);
-			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)+4);
-		}
-		/*
-		else if(player1.getY() >= (canvas.getHeight()/2)+32){
-			canvas.translate(-player1.getX(), -camHeight);
-			canvas.translate((canvas.getWidth()/3)-16,(canvas.getHeight()/3)-16);
-			Log.w("DebugPlayerPositionIF2","x:" + player1.getX() + " y:" + player1.getY() );
-			Log.w("DebugPlayerPositionIF2","" + canvas.getHeight()/2 );
-		}*/
+		canvas.translate(-lastTransX, -lastTransY);
 	}
 
 	
@@ -132,6 +122,7 @@ public class Map {
 	 * DEBUG FUNCTION TO DRAW THE MATRIX INGAME!
 	 * @param canvas
 	 */
+	@SuppressWarnings("unused")
 	private void DEBUGPRINTMATRIX(Canvas canvas) {
 		Paint paint = new Paint();  
 		paint.setColor(Color.WHITE); 
@@ -148,7 +139,7 @@ public class Map {
 		int y = j ;
 		Sprite nextPos = mapMatrix[x][y];
 		try{
-			if(nextPos.isWalkable())	
+			if(nextPos instanceof Walkable)	
 				return true;
 			else
 				return false;
@@ -170,7 +161,8 @@ public class Map {
 	public void moveObjects() {
 		for(int col=0; col < mapMatrix[0].length; col++){
 			for(int row=0; row < mapMatrix.length; row++){
-				mapMatrix[row][col].moveRandom(); 
+				if(mapMatrix[row][col] instanceof Moveable)
+					((Moveable)mapMatrix[row][col]).moveRandom(); 
 			}
 		}
 	}
@@ -181,7 +173,7 @@ public class Map {
 		int playerMatrixY = player1.getMatrixY();
 		int playerX = player1.getX();
 		int playerY = player1.getY();
-		if(mapMatrix[playerMatrixX][playerMatrixY].isWalkable()){
+		if(mapMatrix[playerMatrixX][playerMatrixY] instanceof Walkable && player1.canMove()){
 			mapMatrix[playerMatrixX][playerMatrixY] = new Bomb(gameView,playerX,playerY);
 		}
 	}

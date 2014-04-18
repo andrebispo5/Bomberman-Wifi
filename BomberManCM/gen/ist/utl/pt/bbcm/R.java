@@ -32,15 +32,20 @@ public final class R {
         public static final int wall=0x7f020008;
     }
     public static final class id {
-        public static final int action_settings=0x7f080008;
-        public static final int bombBtn=0x7f080007;
-        public static final int downBtn=0x7f080003;
-        public static final int gameFrame=0x7f080001;
+        public static final int HUD=0x7f080001;
+        public static final int action_settings=0x7f08000d;
+        public static final int bombBtn=0x7f08000b;
+        public static final int downBtn=0x7f08000a;
+        public static final int gameFrame=0x7f080006;
         public static final int gameLayout=0x7f080000;
-        public static final int leftBtn=0x7f080006;
-        public static final int padFrame=0x7f080002;
-        public static final int rightBtn=0x7f080004;
-        public static final int upBtn=0x7f080005;
+        public static final int leftBtn=0x7f08000c;
+        public static final int nameTxt=0x7f080002;
+        public static final int padFrame=0x7f080007;
+        public static final int playersTxt=0x7f080005;
+        public static final int rightBtn=0x7f080008;
+        public static final int scoreTxt=0x7f080003;
+        public static final int timeTxt=0x7f080004;
+        public static final int upBtn=0x7f080009;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

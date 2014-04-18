@@ -2,11 +2,13 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
+import ist.utl.pt.bbcm.sprites.interfaces.Killable;
+import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-public class Obstacle implements Sprite {
+public class Obstacle implements Sprite,Killable {
 
 	private Bitmap bmp;
 	private int x;
@@ -44,12 +46,6 @@ public class Obstacle implements Sprite {
 		return "O";
 	}
 
-
-	@Override
-	public boolean isWalkable() {
-		return false;
-	}
-	
 	@Override
 	public int getX() {
 		return x;
@@ -59,17 +55,6 @@ public class Obstacle implements Sprite {
 	public int getY() {
 		return y;
 	}
-	
-	@Override
-	public void moveRandom() {		
-	}
-
-
-	@Override
-	public boolean isKillable() {
-		// TODO Auto-generated method stub
-		return true;
-	}
 
 
 	@Override
@@ -77,5 +62,11 @@ public class Obstacle implements Sprite {
 		needsDrawing = false;
 		Sprite[][] matrix = gameView.getMap().getMapMatrix();
 		matrix[x/32][y/32] = new EmptySpace(gameView,0,0);
+	}
+
+
+	@Override
+	public int getLoot() {
+		return 1;
 	}
 }

@@ -12,11 +12,50 @@
         android:layout_weight="1" >
 
     <LinearLayout
+        android:id="@+id/HUD"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        android:background="#000000"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/nameTxt"
+        	android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Name:" 
+            android:textColor="#ffffff"/>
+        <TextView
+            android:id="@+id/scoreTxt"
+        	android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Score:" 
+            android:textColor="#ffffff"/>
+        <TextView
+            android:id="@+id/timeTxt"
+        	android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Time:"
+            android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/playersTxt"
+        	android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Players:" 
+            android:textColor="#ffffff"/>
+
+    </LinearLayout>
+    
+    <LinearLayout
         android:id="@+id/gameFrame"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight=".7"
-        android:background="#FFFFFF"
+        android:background="#000000"
         android:orientation="vertical" >
 
     </LinearLayout>
@@ -25,17 +64,8 @@
         android:id="@+id/padFrame"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight=".3"
-        android:background="#DDFFFF" >
-
-        <Button
-            android:id="@+id/downBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="29dp"
-            android:text="@string/downArrow" />
+        android:layout_weight=".2"
+        android:background="#000000" >
 
         <Button
             android:id="@+id/rightBtn"
@@ -49,27 +79,35 @@
             android:id="@+id/upBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/downBtn"
             android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/rightBtn"
             android:text="@string/upArrow" />
 
         <Button
-            android:id="@+id/leftBtn"
+            android:id="@+id/downBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/rightBtn"
-            android:text="@string/leftArrow" />
+            android:layout_alignLeft="@+id/upBtn"
+            android:layout_alignParentBottom="true"
+            android:text="@string/downArrow" />
 
         <Button
             android:id="@+id/bombBtn"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/leftBtn"
             android:layout_alignBottom="@+id/leftBtn"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="28dp"
             android:text="@string/Bomb" />
+
+        <Button
+            android:id="@+id/leftBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/upBtn"
+            android:text="@string/leftArrow" />
 
     </RelativeLayout>
 
