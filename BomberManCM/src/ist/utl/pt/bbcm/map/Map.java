@@ -182,4 +182,19 @@ public class Map {
 	public void removeBomb(Bomb b){
 		mapMatrix[b.getMatrixX()][b.getMatrixY()] = new EmptySpace(gameView,b.getX(),b.getY());
 	}
+	
+	public int getPlayerPosX(){
+		int x = player1.getMatrixX();
+		return x;
+	}
+	
+	public int getPlayerPosY(){
+		int y = player1.getMatrixY();
+		return y;
+	}
+	
+	public void killPlayer(){
+		Log.w("KILLING ORDER!","Killing order on map.KillPlayer");
+		player1.kill();
+	}
 }

@@ -90,4 +90,8 @@ public class GameView extends SurfaceView {
 	public Map getMap() {
 		return map;
 	}
+	
+	public void endGame(){
+		communicationChannel.endGame();
+	}
 }

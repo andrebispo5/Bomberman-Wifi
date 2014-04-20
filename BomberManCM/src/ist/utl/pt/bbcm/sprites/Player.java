@@ -127,6 +127,7 @@ public class Player implements Sprite, Killable, Moveable {
 	public void kill(){
 		this.isAlive = false;
 		this.stopDrawing();
+		gameView.communicationChannel.endGame();
 	}
 	
 	public void spawn(){

@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.CountDownTimer;
+import android.util.Log;
 import ist.utl.pt.bbcm.enums.DIRECTION;
 
 public class Bomb implements Sprite {
@@ -54,9 +55,19 @@ public class Bomb implements Sprite {
 		Map map = gameView.getMap();
 		Sprite[][] mapMatrix = map.getMapMatrix();
 		int score = 0;
+		int playerX=map.getPlayerPosX();
+		int playerY=map.getPlayerPosY();
 		for(DIRECTION dir : DIRECTION.values()){
+			Log.w("PlayerX",""+playerX);
+			Log.w("PlayerY",""+playerY);
 			int posNextMatrixX = this.getMatrixX() + dir.x;
 			int posNextMatrixY = this.getMatrixY() + dir.y;
+			Log.w("posNextMatrixX",""+posNextMatrixX);
+			Log.w("posNextMatrixY",""+posNextMatrixY);
+			
+			if(posNextMatrixX == playerX && posNextMatrixY == playerY){
+				map.killPlayer();
+			}
 			Object adjObj = mapMatrix[posNextMatrixX][posNextMatrixY];
 			if(adjObj instanceof Killable){
 				score+=((Killable) adjObj).getLoot();
@@ -68,6 +79,9 @@ public class Bomb implements Sprite {
 			}
 		}
 		mapMatrix[this.getMatrixX()][this.getMatrixY()] = new Explosion(gameView, x, y);
+		if(this.getMatrixX() == playerX && this.getMatrixY() == playerY){
+			map.killPlayer();
+		}
 		bombOwner.updateScore(score);
 	}
 
