@@ -8,12 +8,14 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
 	public TextView tvScore;
+	public Chronometer gameTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,8 @@ public class MainActivity extends Activity {
 		GameView newGame = new GameView(this);
 		gameLayout.addView(newGame);
 		initButtons();
+		gameTime = (Chronometer)findViewById(R.id.gameTime);
+		gameTime.start();
 	}
 
 	@Override

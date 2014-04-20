@@ -34,13 +34,14 @@
             android:layout_height="wrap_content"
             android:text="Score:" 
             android:textColor="#ffffff"/>
-        <TextView
-            android:id="@+id/timeTxt"
-        	android:layout_weight="1"
+        
+        <Chronometer
+ 			android:id="@+id/gameTime"
+  			android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Time:"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"/>
+        
         <TextView
             android:id="@+id/playersTxt"
         	android:layout_weight="1"
