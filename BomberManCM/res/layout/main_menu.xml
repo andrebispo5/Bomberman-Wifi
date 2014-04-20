@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:layout_gravity="center_horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Menu">
+    
+    <ImageView
+        android:id="@+id/imageView1"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+        android:src="@drawable/bomberwall" 
+    	android:layout_gravity="center_horizontal"
+    	android:scaleType="fitXY"/>"
+
+    
+
+    <Button
+        android:id="@+id/exitBtn"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/exit_button" 
+        android:onClick="exitGame"/>
+
+    <Button
+        android:id="@+id/newBtn"
+        android:layout_width="170dp"
+        android:layout_height="30dp"
+        android:layout_above="@+id/settingsBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/new_game_button" 
+        android:onClick="startNewGame"/>
+
+    <Button
+        android:id="@+id/settingsBtn"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_above="@+id/exitBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/settings_button" />
+
+</RelativeLayout>

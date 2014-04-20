@@ -8,8 +8,6 @@ import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
@@ -34,6 +32,7 @@ public class Player implements Sprite, Killable, Moveable {
 	private boolean isAlive;
 	private GameView gameView;
 	private int score;
+	private DIRECTION nextMove;
 
 
 	
@@ -51,6 +50,7 @@ public class Player implements Sprite, Killable, Moveable {
         this.needsDrawing = true;
         this.isAlive = false;
         this.score=10;
+        this.nextMove = null;
 	}
 
 
@@ -63,11 +63,6 @@ public class Player implements Sprite, Killable, Moveable {
 			Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 			Rect dst = new Rect(getX(), getY(), getX() + width, getY() + height);
 			canvas.drawBitmap(bmp, src, dst, null);
-			Log.w("DEBUGPOS", String.format("%d , %d", x,y));
-			Paint paint = new Paint();  
-			paint.setColor(Color.WHITE); 
-			paint.setTextSize(8); 
-			canvas.drawText(String.format("%d , %d", x,y), x, y+16, paint);
 		}
 	}
 
@@ -88,6 +83,10 @@ public class Player implements Sprite, Killable, Moveable {
 			setY(getY() + ySpeed);
 			numSteps -= Math.abs(ySpeed);
 			currentFrame = ++currentFrame % BMP_COLUMNS;
+		}else if(nextMove!=null){
+			Log.w("QUEUE", "Using next dir:" + nextMove.name() );
+			this.move(nextMove);
+			nextMove = null;
 		}
 	}
 	
@@ -95,13 +94,16 @@ public class Player implements Sprite, Killable, Moveable {
 	public void move(DIRECTION direction) {
 		int posNextMatrixX = this.getMatrixX() + direction.x;
 		int posNextMatrixY = this.getMatrixY() + direction.y;
-		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY) && this.canMove()){
+		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY)){
 			int tmpx = direction.x * CELL_SPACING/8;
 			int tmpy = direction.y * CELL_SPACING/8;
-			if (numSteps == 0) {
+			if (this.canMove()) {
 				numSteps = CELL_SPACING;
 				xSpeed = tmpx;
 				ySpeed = tmpy;
+			}else{
+				Log.w("QUEUE", "ADDED dir:" + direction.name());
+				nextMove = direction;
 			}
 		}
 	}

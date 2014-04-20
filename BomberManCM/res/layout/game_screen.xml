@@ -9,7 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity"
-        android:layout_weight="1" >
+    android:layout_weight="1" 
+    android:background="#000000">
 
     <LinearLayout
         android:id="@+id/HUD"
@@ -69,45 +70,44 @@
 
         <Button
             android:id="@+id/rightBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/rightArrow" />
+        	android:background="@drawable/right_button"  />
 
         <Button
             android:id="@+id/upBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/rightBtn"
-            android:text="@string/upArrow" />
+    	    android:background="@drawable/up_button"  />
 
         <Button
             android:id="@+id/downBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignLeft="@+id/upBtn"
             android:layout_alignParentBottom="true"
-            android:text="@string/downArrow" />
-
-        <Button
-            android:id="@+id/bombBtn"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/leftBtn"
-            android:layout_alignBottom="@+id/leftBtn"
-            android:layout_alignParentLeft="true"
-            android:text="@string/Bomb" />
+        	android:background="@drawable/down_button"/> 
 
         <Button
             android:id="@+id/leftBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/upBtn"
-            android:text="@string/leftArrow" />
+       		android:background="@drawable/left_button" />
+
+        <Button
+            android:id="@+id/bombBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignBaseline="@+id/leftBtn"
+            android:layout_alignBottom="@+id/leftBtn"
+            android:layout_alignParentLeft="true"
+       		android:background="@drawable/bomb_button"  />
 
     </RelativeLayout>
 

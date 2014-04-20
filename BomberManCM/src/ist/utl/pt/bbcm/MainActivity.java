@@ -3,9 +3,8 @@ package ist.utl.pt.bbcm;
 
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.app.Activity;
-import android.content.ContentValues;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -19,10 +18,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.game_screen);
 		tvScore = (TextView) findViewById(R.id.scoreTxt);
 		LinearLayout gameLayout = (LinearLayout)findViewById(R.id.gameFrame);
-		GameView newGame = new GameView(this,this);
+		GameView newGame = new GameView(this);
 		gameLayout.addView(newGame);
 		initButtons();
 	}
@@ -37,11 +36,12 @@ public class MainActivity extends Activity {
 	private void initButtons(){
 		LinearLayout gameLayout = (LinearLayout)findViewById(R.id.gameFrame);
 		final GameView newGame = (GameView) gameLayout.getChildAt(0);
-		
+		final Vibrator myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 		Button upBtn = (Button) findViewById(R.id.upBtn);
 		upBtn.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				myVib.vibrate(50);
 				newGame.movePlayer(DIRECTION.UP);
 			}
 		});
@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
 		downBtn.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				myVib.vibrate(50);
 				newGame.movePlayer(DIRECTION.DOWN);
 			}
 		});
@@ -56,6 +57,7 @@ public class MainActivity extends Activity {
 		leftBtn.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				myVib.vibrate(50);
 				newGame.movePlayer(DIRECTION.LEFT);
 			}
 		});
@@ -63,6 +65,7 @@ public class MainActivity extends Activity {
 		rightBtn.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				myVib.vibrate(50);
 				newGame.movePlayer(DIRECTION.RIGHT);
 			}
 		});
@@ -71,6 +74,7 @@ public class MainActivity extends Activity {
 		bombBtn.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				myVib.vibrate(50);
 				newGame.placeBomb();
 			}
 		});
