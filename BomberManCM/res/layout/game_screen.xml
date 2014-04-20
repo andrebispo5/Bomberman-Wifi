@@ -22,13 +22,15 @@
 
         <TextView
             android:id="@+id/nameTxt"
+            android:textSize="12sp"
         	android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Name:" 
+            android:text="Name: play1" 
             android:textColor="#ffffff"/>
         <TextView
             android:id="@+id/scoreTxt"
+            android:textSize="12sp"
         	android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -37,6 +39,7 @@
         
         <Chronometer
  			android:id="@+id/gameTime"
+ 			android:textSize="12sp"
   			android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,10 +47,11 @@
         
         <TextView
             android:id="@+id/playersTxt"
+            android:textSize="12sp"
         	android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Players:" 
+            android:text="Players: 1" 
             android:textColor="#ffffff"/>
 
     </LinearLayout>

@@ -80,7 +80,11 @@ public class GameView extends SurfaceView {
 	}
 	
 	public void refreshHUD(int val){
-		communicationChannel.setVal(val);
+		communicationChannel.setScore(val);
+	}
+	
+	public void refreshNumberPlayers(int val){
+		communicationChannel.setNumPlayers(val);
 	}
 
 	public Map getMap() {

@@ -16,12 +16,14 @@ public class MainActivity extends Activity {
 	
 	public TextView tvScore;
 	public Chronometer gameTime;
+	public TextView tvNumPlayers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_screen);
 		tvScore = (TextView) findViewById(R.id.scoreTxt);
+		tvNumPlayers = (TextView) findViewById(R.id.playersTxt);
 		LinearLayout gameLayout = (LinearLayout)findViewById(R.id.gameFrame);
 		GameView newGame = new GameView(this);
 		gameLayout.addView(newGame);
@@ -84,11 +86,21 @@ public class MainActivity extends Activity {
 		});
 	}
 	
-	public void setVal(final int val){
+	public void setScore(final int val){
 		runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
 		    	 tvScore.setText("Score:" + val);
+		    }
+		});
+		
+	 }
+	
+	public void setNumPlayers(final int val){
+		runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+		    	 tvNumPlayers.setText("Players: " + val);
 		    }
 		});
 		
