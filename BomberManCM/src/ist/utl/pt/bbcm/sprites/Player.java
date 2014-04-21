@@ -1,6 +1,7 @@
 package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
+import ist.utl.pt.bbcm.Settings;
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import ist.utl.pt.bbcm.sprites.interfaces.Killable;
 import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
@@ -170,7 +171,7 @@ public class Player implements Sprite, Killable, Moveable {
 
 	@Override
 	public int getLoot() {
-		return 10;
+		return Settings.ptsPerPlayer;
 	}
 	
 	public int getScore() {

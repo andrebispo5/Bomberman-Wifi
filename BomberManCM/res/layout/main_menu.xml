@@ -44,6 +44,7 @@
         android:layout_above="@+id/exitBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/settings_button" />
+        android:background="@drawable/settings_button" 
+        android:onClick="goToSettings"/>
 
 </RelativeLayout>

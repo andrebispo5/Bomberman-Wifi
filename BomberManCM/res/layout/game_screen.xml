@@ -37,8 +37,9 @@
             android:text="Score:" 
             android:textColor="#ffffff"/>
         
-        <Chronometer
+        <TextView
  			android:id="@+id/gameTime"
+ 			android:format="%s"
  			android:textSize="12sp"
   			android:layout_weight="1"
             android:layout_width="0dp"

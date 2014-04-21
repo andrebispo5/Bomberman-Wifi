@@ -2,6 +2,7 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
+import ist.utl.pt.bbcm.Settings;
 import ist.utl.pt.bbcm.map.Map;
 import ist.utl.pt.bbcm.sprites.interfaces.Killable;
 import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
@@ -32,7 +33,7 @@ public class Bomb implements Sprite {
 		this.y = y;
 		this.needsDrawing = true;
 		this.bombOwner=bombOwner;
-		new CountDownTimer(4000, 1000) {
+		new CountDownTimer(Settings.bombTimer, 1000) {
 		     public void onTick(long millisUntilFinished) {}
 		     public void onFinish() {stopDrawing();}
 		  }.start();
@@ -58,29 +59,27 @@ public class Bomb implements Sprite {
 		int playerX=map.getPlayerPosX();
 		int playerY=map.getPlayerPosY();
 		for(DIRECTION dir : DIRECTION.values()){
-			Log.w("PlayerX",""+playerX);
-			Log.w("PlayerY",""+playerY);
-			int posNextMatrixX = this.getMatrixX() + dir.x;
-			int posNextMatrixY = this.getMatrixY() + dir.y;
-			Log.w("posNextMatrixX",""+posNextMatrixX);
-			Log.w("posNextMatrixY",""+posNextMatrixY);
-			
-			if(posNextMatrixX == playerX && posNextMatrixY == playerY){
-				map.killPlayer();
+			for(int r=0; r<=Settings.explosionRange; r++ ){
+				int posNextMatrixX = this.getMatrixX() + dir.x*r;
+				int posNextMatrixY = this.getMatrixY() + dir.y*r;
+				Object adjObj = mapMatrix[posNextMatrixX][posNextMatrixY];
+				if(adjObj instanceof Wall){
+					break;
+				}else{
+					if(posNextMatrixX == playerX && posNextMatrixY == playerY){
+						map.killPlayer();
+					}
+					if(adjObj instanceof Killable){
+						score+=((Killable) adjObj).getLoot();
+						((Killable)adjObj).kill();
+						mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x*r, y + 32*dir.y*r);
+						break;
+					}else if(adjObj instanceof Walkable){
+						mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x*r, y + 32*dir.y*r);
+					}
+				}
+				
 			}
-			Object adjObj = mapMatrix[posNextMatrixX][posNextMatrixY];
-			if(adjObj instanceof Killable){
-				score+=((Killable) adjObj).getLoot();
-				((Killable)adjObj).kill();
-				mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x, y + 32*dir.y);
-			}
-			if(adjObj instanceof Walkable){
-				mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x, y + 32*dir.y);
-			}
-		}
-		mapMatrix[this.getMatrixX()][this.getMatrixY()] = new Explosion(gameView, x, y);
-		if(this.getMatrixX() == playerX && this.getMatrixY() == playerY){
-			map.killPlayer();
 		}
 		bombOwner.updateScore(score);
 	}

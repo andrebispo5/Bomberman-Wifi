@@ -15,7 +15,7 @@ public class Menu extends Activity {
 	
 	/** Called when the user clicks the Send button */
 	public void startNewGame(View view) {
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, ist.utl.pt.bbcm.MainActivity.class);
 	    startActivity(intent);
 	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 	}
@@ -24,6 +24,12 @@ public class Menu extends Activity {
 	            finish();
 	    	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 	            System.exit(0);
+	}
+	
+	public void goToSettings(View view){
+		Intent intent = new Intent(this, ist.utl.pt.bbcm.Settings.class);
+	    startActivity(intent);
+	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 	}
 	
 }

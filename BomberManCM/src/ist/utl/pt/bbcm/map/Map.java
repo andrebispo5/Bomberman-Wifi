@@ -2,6 +2,7 @@ package ist.utl.pt.bbcm.map;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
+import ist.utl.pt.bbcm.Settings;
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import ist.utl.pt.bbcm.enums.LEVELS;
 import ist.utl.pt.bbcm.sprites.Bomb;
@@ -41,7 +42,7 @@ public class Map {
 	}
 
 	private void createMap() {
-		String mapContent = LEVELS.LVL1.getMap();
+		String mapContent = Settings.lvl.getMap();
 		String[] totalRows = mapContent.split("\n");
 		int numCols = totalRows.length;
 		int numRows = totalRows[0].length();

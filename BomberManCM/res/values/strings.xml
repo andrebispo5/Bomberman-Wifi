@@ -9,5 +9,74 @@
     <string name="leftArrow">&lt;</string>
     <string name="rightArrow">&gt;</string>
     <string name="Bomb">Bomb</string>
-
+    
+    <string name="level_prompt">Pick a level:</string>
+    <string-array name="level_arrays">
+        <item>One</item>
+        <item>Two</item>
+    </string-array>
+	
+    <string name="game_duration_prompt">Game duration:</string>
+    <string-array name="duration_arrays">
+        <item>60</item>
+        <item>90</item>
+        <item>120</item>
+        <item>150</item>
+        <item>180</item>
+        <item>300</item>
+    </string-array>
+    
+    <string name="bomb_timer_prompt">Bomb time:</string>
+    <string-array name="timer_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    
+    <string name="explosion_timer_prompt">Explosion time:</string>
+    <string-array name="explosion_timer_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    
+    <string name="explosion_range_prompt">Explosion range:</string>
+    <string-array name="explosion_range_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    
+    <string name="robot_speed_prompt">Robot speed:</string>
+    <string-array name="robot_speed_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    
+    <string name="robot_points_prompt">Robot points:</string>
+    <string-array name="robot_points_arrays">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+    </string-array>
+    
+    <string name="player_points_prompt">Player points:</string>
+    <string-array name="player_points_arrays">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+    </string-array>
 </resources>

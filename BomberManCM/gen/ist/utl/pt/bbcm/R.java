@@ -12,6 +12,16 @@ public final class R {
         public static final int fade_in=0x7f040000;
         public static final int fade_out=0x7f040001;
     }
+    public static final class array {
+        public static final int duration_arrays=0x7f070001;
+        public static final int explosion_range_arrays=0x7f070004;
+        public static final int explosion_timer_arrays=0x7f070003;
+        public static final int level_arrays=0x7f070000;
+        public static final int player_points_arrays=0x7f070007;
+        public static final int robot_points_arrays=0x7f070006;
+        public static final int robot_speed_arrays=0x7f070005;
+        public static final int timer_arrays=0x7f070002;
+    }
     public static final class attr {
     }
     public static final class dimen {
@@ -56,40 +66,60 @@ public final class R {
         public static final int wall=0x7f02001c;
     }
     public static final class id {
-        public static final int HUD=0x7f090001;
-        public static final int action_settings=0x7f090011;
-        public static final int bombBtn=0x7f09000c;
-        public static final int downBtn=0x7f09000a;
-        public static final int exitBtn=0x7f09000e;
-        public static final int gameFrame=0x7f090006;
-        public static final int gameLayout=0x7f090000;
-        public static final int gameTime=0x7f090004;
-        public static final int imageView1=0x7f09000d;
-        public static final int leftBtn=0x7f09000b;
-        public static final int nameTxt=0x7f090002;
-        public static final int newBtn=0x7f09000f;
-        public static final int padFrame=0x7f090007;
-        public static final int playersTxt=0x7f090005;
-        public static final int rightBtn=0x7f090008;
-        public static final int scoreTxt=0x7f090003;
-        public static final int settingsBtn=0x7f090010;
-        public static final int upBtn=0x7f090009;
+        public static final int HUD=0x7f0a0001;
+        public static final int action_settings=0x7f0a001c;
+        public static final int bombBtn=0x7f0a000c;
+        public static final int bombTimerOption=0x7f0a0014;
+        public static final int button1=0x7f0a001b;
+        public static final int button2=0x7f0a001a;
+        public static final int downBtn=0x7f0a000a;
+        public static final int exitBtn=0x7f0a000e;
+        public static final int explosionRangeOption=0x7f0a0016;
+        public static final int explosionTimerOption=0x7f0a0015;
+        public static final int gameDurationOption=0x7f0a0013;
+        public static final int gameFrame=0x7f0a0006;
+        public static final int gameLayout=0x7f0a0000;
+        public static final int gameTime=0x7f0a0004;
+        public static final int imageView1=0x7f0a000d;
+        public static final int leftBtn=0x7f0a000b;
+        public static final int levelOption=0x7f0a0012;
+        public static final int nameTxt=0x7f0a0002;
+        public static final int newBtn=0x7f0a000f;
+        public static final int padFrame=0x7f0a0007;
+        public static final int playerPointsOption=0x7f0a0019;
+        public static final int playersTxt=0x7f0a0005;
+        public static final int rightBtn=0x7f0a0008;
+        public static final int robotPointsOption=0x7f0a0018;
+        public static final int robotSpeedOption=0x7f0a0017;
+        public static final int scoreTxt=0x7f0a0003;
+        public static final int setingsLayout=0x7f0a0011;
+        public static final int settingsBtn=0x7f0a0010;
+        public static final int upBtn=0x7f0a0009;
     }
     public static final class layout {
         public static final int game_screen=0x7f030000;
         public static final int main_menu=0x7f030001;
+        public static final int settings_screen=0x7f030002;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
+        public static final int main=0x7f090000;
     }
     public static final class string {
         public static final int Bomb=0x7f060007;
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
+        public static final int bomb_timer_prompt=0x7f06000a;
         public static final int downArrow=0x7f060003;
+        public static final int explosion_range_prompt=0x7f06000c;
+        public static final int explosion_timer_prompt=0x7f06000b;
+        public static final int game_duration_prompt=0x7f060009;
         public static final int hello_world=0x7f060002;
         public static final int leftArrow=0x7f060005;
+        public static final int level_prompt=0x7f060008;
+        public static final int player_points_prompt=0x7f06000f;
         public static final int rightArrow=0x7f060006;
+        public static final int robot_points_prompt=0x7f06000e;
+        public static final int robot_speed_prompt=0x7f06000d;
         public static final int upArrow=0x7f060004;
     }
     public static final class style {
@@ -114,10 +144,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f070000;
+        public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f070001;
+        public static final int AppTheme=0x7f080001;
     }
 }
