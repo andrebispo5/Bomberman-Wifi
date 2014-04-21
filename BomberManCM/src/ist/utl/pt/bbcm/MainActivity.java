@@ -2,6 +2,7 @@ package ist.utl.pt.bbcm;
 
 
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.SETTINGS;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -19,6 +20,7 @@ public class MainActivity extends Activity {
 	public TextView gameTime;
 	public TextView tvNumPlayers;
 	public int ElapsedTime;
+	private static boolean active;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +38,12 @@ public class MainActivity extends Activity {
 	private void initTimer() {
 		ElapsedTime=0;
 		gameTime = (TextView)findViewById(R.id.gameTime);
-		new CountDownTimer(Settings.gameDuration, 1000) {
+		new CountDownTimer(SETTINGS.gameDuration, 1000) {
 		     public void onTick(long millisUntilFinished) {
-		    	 setTime(Settings.gameDuration - ElapsedTime);
+		    	 setTime(SETTINGS.gameDuration - ElapsedTime);
 		    	 ElapsedTime+=1000;
 		     }
-		     public void onFinish() {endGame();}
+		     public void onFinish() {if(active)endGame();}
 		  }.start();
 	}
 
@@ -129,8 +131,24 @@ public class MainActivity extends Activity {
 		
 	 }
 	public void endGame(){
-		Intent intent = new Intent(this, ist.utl.pt.bbcm.Menu.class);
-	    startActivity(intent);
-	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+		finish();
 	}
+	
+    @Override
+    public void onStart() {
+       super.onStart();
+       active = true;
+    } 
+
+    @Override
+    public void onStop() {
+       super.onStop();
+       active = false;
+    }
+    
+    @Override
+    public void onPause() {
+       super.onStop();
+       active = false;
+    }
 }

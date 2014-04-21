@@ -2,9 +2,8 @@ package ist.utl.pt.bbcm.map;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
-import ist.utl.pt.bbcm.Settings;
 import ist.utl.pt.bbcm.enums.DIRECTION;
-import ist.utl.pt.bbcm.enums.LEVELS;
+import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.sprites.Bomb;
 import ist.utl.pt.bbcm.sprites.EmptySpace;
 import ist.utl.pt.bbcm.sprites.Obstacle;
@@ -42,7 +41,7 @@ public class Map {
 	}
 
 	private void createMap() {
-		String mapContent = Settings.lvl.getMap();
+		String mapContent = SETTINGS.lvl.getMap();
 		String[] totalRows = mapContent.split("\n");
 		int numCols = totalRows.length;
 		int numRows = totalRows[0].length();

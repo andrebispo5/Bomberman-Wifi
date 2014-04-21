@@ -24,7 +24,6 @@ public class GameView extends SurfaceView {
           scaleDen = getResources().getDisplayMetrics().density;
           gameLoopThread = new GameLoopThread(this);
           holder = getHolder();
-          //holder.setFixedSize(32*19, 32*13);
           addHolderCallback();
           map = new Map(this);
     }

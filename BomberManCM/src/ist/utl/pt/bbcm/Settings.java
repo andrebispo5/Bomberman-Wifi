@@ -2,23 +2,15 @@ package ist.utl.pt.bbcm;
 
 
 import ist.utl.pt.bbcm.enums.LEVELS;
+import ist.utl.pt.bbcm.enums.SETTINGS;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Spinner;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 public class Settings extends Activity {
-	public static LEVELS lvl;
-	public static int gameDuration;
-	public static int bombTimer;
-	public static int explosionRange;
-	public static int explosionDuration;
-	public static int robotSpeed;
-	public static int ptsPerRobot;
-	public static int ptsPerPlayer;
+
 	private static boolean created;
 	private static Spinner gD;
 	private static Spinner bT;
@@ -28,7 +20,6 @@ public class Settings extends Activity {
 	private static Spinner rP;
 	private static Spinner pP;
 	private static Spinner ll;
-
 	private static int gDPos;
 	private static int bTPos;
 	private static int eRPos;
@@ -42,6 +33,24 @@ public class Settings extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings_screen);
+		getSpinners();
+		if(created){
+			loadPreviousSettings();
+		}
+	}
+
+	private void loadPreviousSettings() {
+		gD.setSelection(gDPos);
+		bT.setSelection(bTPos);
+		eR.setSelection(eRPos);
+		eT.setSelection(eTPos);
+		rS.setSelection(rSPos);
+		rP.setSelection(rPPos);
+		pP.setSelection(pPPos);
+		ll.setSelection(llPos);
+	}
+
+	private void getSpinners() {
 		gD = (Spinner)findViewById(R.id.gameDurationOption);
 		bT =(Spinner)findViewById(R.id.bombTimerOption);
 		eR=(Spinner)findViewById(R.id.explosionRangeOption);
@@ -50,16 +59,6 @@ public class Settings extends Activity {
 		rP=(Spinner)findViewById(R.id.robotPointsOption);
 		pP=(Spinner)findViewById(R.id.playerPointsOption);
 		ll=(Spinner)findViewById(R.id.levelOption);
-		if(created){
-			gD.setSelection(gDPos);
-			bT.setSelection(bTPos);
-			eR.setSelection(eRPos);
-			eT.setSelection(eTPos);
-			rS.setSelection(rSPos);
-			rP.setSelection(rPPos);
-			pP.setSelection(pPPos);
-			ll.setSelection(llPos);
-		}
 	}
 	
 	public void saveSettings(View view){
@@ -72,13 +71,13 @@ public class Settings extends Activity {
 		String ptsPerPlayerSpinner =(String) pP.getSelectedItem();
 		String levelSpinner =(String) ll.getSelectedItem();
 
-		gameDuration = Integer.parseInt(gameDurationSpinner)*1000;
-		bombTimer = Integer.parseInt(bombTimeSpinner)*1000;
-		explosionRange = Integer.parseInt(explosionRangeSpinner);
-		explosionDuration = Integer.parseInt(explosionDurationSpinner)*1000;
-		robotSpeed = Integer.parseInt(robotSpeedSpinner);
-		ptsPerRobot = Integer.parseInt(ptsPerRobotSpinner);
-		ptsPerPlayer = Integer.parseInt(ptsPerPlayerSpinner);
+		SETTINGS.gameDuration = Integer.parseInt(gameDurationSpinner)*1000;
+		SETTINGS.bombTimer = Integer.parseInt(bombTimeSpinner)*1000;
+		SETTINGS.explosionRange = Integer.parseInt(explosionRangeSpinner);
+		SETTINGS.explosionDuration = Integer.parseInt(explosionDurationSpinner)*1000;
+		SETTINGS.robotSpeed = Integer.parseInt(robotSpeedSpinner);
+		SETTINGS.ptsPerRobot = Integer.parseInt(ptsPerRobotSpinner);
+		SETTINGS.ptsPerPlayer = Integer.parseInt(ptsPerPlayerSpinner);
 		
 		gDPos = gD.getSelectedItemPosition();
 		bTPos = bT.getSelectedItemPosition();;
@@ -90,20 +89,16 @@ public class Settings extends Activity {
 		llPos = ll.getSelectedItemPosition();;
 		
 		if(levelSpinner.equals("One")){
-			lvl = LEVELS.LVL1;
+			SETTINGS.lvl = LEVELS.LVL1;
 		}else {
-			lvl = LEVELS.LVL2;
+			SETTINGS.lvl = LEVELS.LVL2;
 		}
 		created=true;
-		Intent intent = new Intent(this, ist.utl.pt.bbcm.Menu.class);
-	    startActivity(intent);
-	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+		finish();
 	}
 	
 	public void cancelSettings(View view){
-		Intent intent = new Intent(this, ist.utl.pt.bbcm.Menu.class);
-	    startActivity(intent);
-	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+		finish();
 	}
 
 	

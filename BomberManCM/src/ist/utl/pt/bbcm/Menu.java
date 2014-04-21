@@ -21,9 +21,8 @@ public class Menu extends Activity {
 	}
 	
 	public void exitGame(View view){
-	            finish();
+	            this.finish();
 	    	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
-	            System.exit(0);
 	}
 	
 	public void goToSettings(View view){

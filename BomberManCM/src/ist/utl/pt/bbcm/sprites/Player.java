@@ -1,18 +1,19 @@
 package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
-import ist.utl.pt.bbcm.Settings;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.sprites.interfaces.Killable;
 import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
 import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
+import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.Log;
 
-public class Player implements Sprite, Killable, Moveable {
+public class Player implements Sprite, Killable, Moveable, Walkable {
 	
 	// direction = 0 up, 1 left, 2 down, 3 right,
 	// animation = 3 back, 1 left, 0 front, 2 right
@@ -171,7 +172,7 @@ public class Player implements Sprite, Killable, Moveable {
 
 	@Override
 	public int getLoot() {
-		return Settings.ptsPerPlayer;
+		return SETTINGS.ptsPerPlayer;
 	}
 	
 	public int getScore() {

@@ -2,7 +2,7 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
-import ist.utl.pt.bbcm.Settings;
+import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +23,7 @@ public class Explosion implements Sprite {
 			this.x = x;
 			this.y = y;
 			this.needsDrawing = true;;
-			new CountDownTimer(Settings.explosionDuration, 1000) {
+			new CountDownTimer(SETTINGS.explosionDuration, 1000) {
 			     public void onTick(long millisUntilFinished) {}
 			     public void onFinish() {stopDrawing();}
 			  }.start();

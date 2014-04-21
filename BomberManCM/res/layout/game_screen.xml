@@ -26,7 +26,7 @@
         	android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Name: play1" 
+            android:text="Name:\n player1" 
             android:textColor="#ffffff"/>
         <TextView
             android:id="@+id/scoreTxt"
@@ -52,7 +52,7 @@
         	android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Players: 1" 
+            android:text="Players:\n 1" 
             android:textColor="#ffffff"/>
 
     </LinearLayout>

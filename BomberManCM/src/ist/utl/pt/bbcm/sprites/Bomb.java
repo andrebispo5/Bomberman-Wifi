@@ -2,7 +2,6 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
-import ist.utl.pt.bbcm.Settings;
 import ist.utl.pt.bbcm.map.Map;
 import ist.utl.pt.bbcm.sprites.interfaces.Killable;
 import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
@@ -11,8 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.CountDownTimer;
-import android.util.Log;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.SETTINGS;
 
 public class Bomb implements Sprite {
 
@@ -33,7 +32,7 @@ public class Bomb implements Sprite {
 		this.y = y;
 		this.needsDrawing = true;
 		this.bombOwner=bombOwner;
-		new CountDownTimer(Settings.bombTimer, 1000) {
+		new CountDownTimer(SETTINGS.bombTimer, 1000) {
 		     public void onTick(long millisUntilFinished) {}
 		     public void onFinish() {stopDrawing();}
 		  }.start();
@@ -59,7 +58,7 @@ public class Bomb implements Sprite {
 		int playerX=map.getPlayerPosX();
 		int playerY=map.getPlayerPosY();
 		for(DIRECTION dir : DIRECTION.values()){
-			for(int r=0; r<=Settings.explosionRange; r++ ){
+			for(int r=0; r<=SETTINGS.explosionRange; r++ ){
 				int posNextMatrixX = this.getMatrixX() + dir.x*r;
 				int posNextMatrixY = this.getMatrixY() + dir.y*r;
 				Object adjObj = mapMatrix[posNextMatrixX][posNextMatrixY];

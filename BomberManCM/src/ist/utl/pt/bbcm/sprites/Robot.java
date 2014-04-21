@@ -2,8 +2,9 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
-import ist.utl.pt.bbcm.Settings;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.SETTINGS;
+import ist.utl.pt.bbcm.map.Map;
 import ist.utl.pt.bbcm.sprites.interfaces.Killable;
 import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
 import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
@@ -69,14 +70,20 @@ public class Robot implements Sprite , Killable, Moveable{
 	
 	@Override
 	public void moveRandom() {
+		Map map = gameView.getMap();
 		DIRECTION direction = DIRECTION.randomDir();
 		int posMatrixX = this.getMatrixX();
 		int posMatrixY = this.getMatrixY();
+		int playerX = map.getPlayerPosX();
+		int playerY = map.getPlayerPosY();
 		int posNextMatrixX = this.getMatrixX() + direction.x;
 		int posNextMatrixY = this.getMatrixY() + direction.y;
 		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY) && this.canMove()){
-			int tmpx = Settings.robotSpeed * direction.x * CELL_SPACING/16;
-			int tmpy = Settings.robotSpeed * direction.y * CELL_SPACING/16;
+			if(posMatrixX == playerX && posMatrixY == playerY){
+				map.killPlayer();
+			}
+			int tmpx = SETTINGS.robotSpeed * direction.x * CELL_SPACING/16;
+			int tmpy = SETTINGS.robotSpeed * direction.y * CELL_SPACING/16;
 			gameView.getMap().updateMatrix(this,posMatrixX,posMatrixY, posNextMatrixX, posNextMatrixY);
 			if (numSteps == 0) {
 				numSteps = CELL_SPACING;
@@ -149,7 +156,7 @@ public class Robot implements Sprite , Killable, Moveable{
 
 	@Override
 	public int getLoot() {
-		return Settings.ptsPerRobot;
+		return SETTINGS.ptsPerRobot;
 	}
 
 	@Override
