@@ -1,0 +1,227 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setingsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+	android:weightSum="10"	
+    tools:context=".Settings"
+    android:background="#000000">
+    
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView      	
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textColor="#FFFFFF"
+		    android:textAlignment="center"
+		    android:text="Level:" />
+		<Spinner
+		    android:id="@+id/levelOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/level_arrays"
+	        android:prompt="@string/level_prompt"/>
+	</LinearLayout> 
+	
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView        	
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textColor="#FFFFFF"
+		    android:textAlignment="center"
+		    android:text="Game Duration:" />
+		<Spinner
+		    android:id="@+id/gameDurationOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/duration_arrays"
+	        android:prompt="@string/game_duration_prompt"/>
+	</LinearLayout> 
+	
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textColor="#FFFFFF"
+		    android:textAlignment="center"
+		    android:text="Bomb Timer:" />
+		<Spinner
+		    android:id="@+id/bombTimerOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/timer_arrays"
+	        android:prompt="@string/bomb_timer_prompt"/>
+	</LinearLayout>
+	 
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textAlignment="center"
+		    android:textColor="#FFFFFF"
+		    android:text="Explosion Timer:" />
+		<Spinner
+		    android:id="@+id/explosionTimerOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/explosion_timer_arrays"
+	        android:prompt="@string/explosion_timer_prompt"/>
+	</LinearLayout> 
+	
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textColor="#FFFFFF"
+		    android:textAlignment="center"
+		    android:text="Explosion Range:" />
+		<Spinner
+		    android:id="@+id/explosionRangeOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/explosion_range_arrays"
+	        android:prompt="@string/explosion_range_prompt"/>
+	</LinearLayout>
+	
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textAlignment="center"
+		    android:textColor="#FFFFFF"
+		    android:text="Robot Speed:" />
+		<Spinner
+		    android:id="@+id/robotSpeedOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/robot_speed_arrays"
+	        android:prompt="@string/robot_speed_prompt"/>
+	</LinearLayout> 
+	
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textAlignment="center"
+		    android:textColor="#FFFFFF"
+		    android:text="Robot Points:" />
+		<Spinner
+		    android:id="@+id/robotPointsOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/robot_points_arrays"
+	        android:prompt="@string/robot_points_prompt"/>
+	</LinearLayout> 
+	
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal" >
+		<TextView
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textColor="#FFFFFF"
+		    android:text="Player Points:" />
+		<Spinner
+		    android:id="@+id/playerPointsOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+	        android:entries="@array/player_points_arrays"
+	        android:prompt="@string/player_points_prompt"/>
+	</LinearLayout> 
+	
+	<LinearLayout 
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+  	  android:layout_weight="1"
+	  android:orientation="horizontal"
+	  android:layout_gravity="center"  >
+		<TextView        	
+		    android:gravity="center_vertical"
+		    android:layout_width="wrap_content"
+ 			android:layout_height="match_parent"
+		    android:textColor="#FFFFFF"
+		    android:textAlignment="center"
+		    android:text="Set Name:" />
+		<EditText 
+		    android:id="@+id/nameOption"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:background="#FFFFFF"
+	  		android:layout_gravity="center"/>
+	</LinearLayout> 
+	
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_gravity="center"
+	    android:layout_weight="1"
+	    android:orientation="horizontal" >
+
+	    <Button
+	        android:id="@+id/button2"
+	        android:layout_width="100dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
+	        android:layout_marginLeft="34dp"
+	        android:onClick="cancelSettings"
+	        android:text="Cancel" />
+
+	    <Button
+	        android:id="@+id/startGameBtn"
+	        android:layout_width="100dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_centerVertical="true"
+	        android:layout_marginRight="34dp"
+	        android:onClick="saveSettings"
+	        android:text="Save" />
+
+	</RelativeLayout>
+	
+</LinearLayout>
