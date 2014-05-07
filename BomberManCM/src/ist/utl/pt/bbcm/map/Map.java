@@ -25,6 +25,7 @@ public class Map {
     public Player player1;
     public Player player2;
     public Player player3;
+    public Player player4;
     public Player myPlayer;
 	private Sprite[][] mapMatrix;
 	private int mapWidth;
@@ -44,13 +45,21 @@ public class Map {
 	private void spawnPlayers() {
 		if(SETTINGS.numPlayers==1){
 			player1.spawn();
+			player4 = new Player(gameView,R.drawable.player4,0,0,"p4");
 		}else if(SETTINGS.numPlayers==2){
 			player1.spawn();
 			player2.spawn();
+			player4 = new Player(gameView,R.drawable.player4,0,0,"p4");
 		}else if(SETTINGS.numPlayers==3){
 			player1.spawn();
 			player2.spawn();
 			player3.spawn();
+			player4 = new Player(gameView,R.drawable.player4,0,0,"p4");
+		}else if(SETTINGS.numPlayers==4){
+			player1.spawn();
+			player2.spawn();
+			player3.spawn();
+			player4.spawn();
 		} 
 	}
 
@@ -61,6 +70,8 @@ public class Map {
 			myPlayer = player2;
 		else if(SETTINGS.myPlayer.equals("p3"))
 			myPlayer = player3;
+		else if(SETTINGS.myPlayer.equals("p4"))
+			myPlayer = player4;
 		
 		
 		lastTransX = myPlayer.getX()+myPlayer.width/2;
@@ -102,6 +113,9 @@ public class Map {
 				}else if(cell=='3'){
 					player3 = new Player(gameView,R.drawable.player3,32*row,32*col,"p3");
 					mapMatrix[row][col] = new EmptySpace(gameView,32*row,32*col);
+				}else if(cell=='4'){
+					player4 = new Player(gameView,R.drawable.player4,32*row,32*col,"p4");
+					mapMatrix[row][col] = new EmptySpace(gameView,32*row,32*col);
 				}
 			}
 		}
@@ -118,15 +132,12 @@ public class Map {
 		player1.drawToCanvas(canvas);
 		player2.drawToCanvas(canvas);
 		player3.drawToCanvas(canvas);
-		String mat = null;
+		player4.drawToCanvas(canvas);
 		for(int col=0; col < mapMatrix[0].length; col++){
 			for(int row=0; row < mapMatrix.length; row++){
 				mapMatrix[row][col].drawToCanvas(canvas);
-				mat += mapMatrix[row][col];
 			}
-			mat += "\n";
 		}
-//		Log.w("MATRIX",mat);
 	}
 
 
@@ -183,7 +194,6 @@ public class Map {
 	public void updateMatrix(Sprite obj,int x, int y, int xNext, int yNext){
 		mapMatrix[xNext][yNext] = obj;
 		mapMatrix[x][y] = new EmptySpace(gameView,obj.getX(),obj.getY());
-		Log.w("GAMELOOP","##CHANGED MATRIX!");
 	}
 	
 	public void movePlayer(DIRECTION direction){
@@ -206,8 +216,10 @@ public class Map {
 		int playerX = myPlayer.getX();
 		int playerY = myPlayer.getY();
 		if(mapMatrix[playerMatrixX][playerMatrixY] instanceof Walkable && myPlayer.canMove()){
-			mapMatrix[playerMatrixX][playerMatrixY] = new Bomb(gameView,playerX,playerY,myPlayer);
-			new ClientConnectorTask().execute("placeBomb:"+playerX +","+ playerY, "PlaceBomb!");
+			if(SETTINGS.singlePlayer)
+				mapMatrix[playerMatrixX][playerMatrixY] = new Bomb(gameView,playerX,playerY,myPlayer);
+			else
+				new ClientConnectorTask().execute("placeBomb:"+playerMatrixX +","+ playerMatrixY+","+myPlayer.id, "PlaceBomb!");
 		}
 	}
 	
@@ -226,8 +238,13 @@ public class Map {
 	}
 	
 	public void killPlayer(){
-		Log.w("KILLING ORDER!","Killing order on map.KillPlayer");
-		player1.kill();
+		if(myPlayer.isAlive){
+			myPlayer.kill();
+			new ClientConnectorTask().execute("playerDied:" + myPlayer.id + "," + myPlayer.getScore() ,"died");
+		}else{
+			myPlayer.spawn();
+			new ClientConnectorTask().execute("playerResume:" + myPlayer.id ,"died");
+		}
 	}
 	
 	public Player getPlayer1(){
@@ -247,7 +264,6 @@ public class Map {
 					direction = dir;
 			}
 			if(mapMatrix[posX][posY] instanceof Robot){
-				Log.w("D: RobotUpdate","Moving Robot. . . .");
 				((Robot)mapMatrix[posX][posY]).move(direction);
 				gameView.getMap().updateMatrix(mapMatrix[posX][posY], posX, posY,
 						posX+dirX, posY+dirY);
@@ -270,13 +286,16 @@ public class Map {
 			}
 			if(playerArgs[0].equals("p1")){
 				Log.w("D: PlayerUpdate","Moving Player1. . . .");
-				player1.updateMultiplayerPos(direction);
+				player1.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
 			}else if(playerArgs[0].equals("p2")){
 				Log.w("D: PlayerUpdate","Moving Player2. . . .");
-				player2.updateMultiplayerPos(direction);
+				player2.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
 			}else if(playerArgs[0].equals("p3")){
 				Log.w("D: PlayerUpdate","Moving Player3. . . .");
-				player3.updateMultiplayerPos(direction);
+				player3.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
+			}else if(playerArgs[0].equals("p4")){
+				Log.w("D: PlayerUpdate","Moving Player4. . . .");
+				player4.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
 			}else{
 				Log.w("D: PlayerUpdate"," No player found!!!!!!!!");
 			}
@@ -284,12 +303,51 @@ public class Map {
 	}
 
 	public void killPlayer(String playerID) {
-		if(playerID.equals("p1")){
+		if(playerID.contains("p1")){
 			player1.kill();
-		}else if(playerID.equals("p2")){
+		}else if(playerID.contains("p2")){
 			player2.kill();
-		}else if(playerID.equals("p3")){
+		}else if(playerID.contains("p3")){
 			player3.kill();
+		}else if(playerID.contains("p4")){
+			player4.kill();
+		}
+	}
+
+	public void placeBombMultiplayer(String[] args) {
+		String[] bombArgs = args[0].split(",");
+		int matX = Integer.parseInt(bombArgs[0]);
+		int matY = Integer.parseInt(bombArgs[1]);
+		Player bombOwner = null;
+		if(bombArgs[2].equals("p1") && player1.isAlive){
+			bombOwner = player1;
+			mapMatrix[matX][matY] = new Bomb(gameView,matX*32,matY*32,bombOwner);
+		}else if(bombArgs[2].equals("p2") && player2.isAlive){
+			bombOwner = player2;
+			mapMatrix[matX][matY] = new Bomb(gameView,matX*32,matY*32,bombOwner);
+		}else if(bombArgs[2].equals("p3") && player3.isAlive){
+			bombOwner = player3;
+			mapMatrix[matX][matY] = new Bomb(gameView,matX*32,matY*32,bombOwner);
+		}else if(bombArgs[2].equals("p4") && player4.isAlive){
+			bombOwner = player4;
+			mapMatrix[matX][matY] = new Bomb(gameView,matX*32,matY*32,bombOwner);
+		}
+	}
+
+	public void giveLoot(String[] lootArgs) {
+		myPlayer.updateScore(Integer.parseInt(lootArgs[1]));
+	}
+
+	public void resumePlayer(String[] args) {
+		String id = args[0];
+		if(id.equals("p1")){
+			player1.spawn();
+		}else if(id.equals("p2")){
+			player2.spawn();
+		}else if(id.equals("p3")){
+			player3.spawn();
+		}else if(id.equals("p4")){
+			player4.spawn();
 		}
 	}
 

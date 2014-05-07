@@ -4,10 +4,14 @@ package ist.utl.pt.bbcm;
 
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import ist.utl.pt.bbcm.enums.SETTINGS;
+import ist.utl.pt.bbcm.networking.ClientConnectorTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +24,8 @@ public class MainActivity extends Activity {
 	public TextView gameTime;
 	public TextView tvNumPlayers;
 	public int ElapsedTime;
-	private static boolean active;
+	private GameView newGame;
+	private CountDownTimer timer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,7 @@ public class MainActivity extends Activity {
 		LinearLayout gameLayout = (LinearLayout)findViewById(R.id.gameFrame);
 		TextView nameTV = (TextView)findViewById(R.id.nameTxt);
 		nameTV.setText("Name:\n"+SETTINGS.playerName);
-		GameView newGame = new GameView(this);
+		newGame = new GameView(this);
 		gameLayout.addView(newGame);
 		initButtons();
 		initTimer();
@@ -41,21 +46,22 @@ public class MainActivity extends Activity {
 	private void initTimer() {
 		ElapsedTime=0;
 		gameTime = (TextView)findViewById(R.id.gameTime);
-		new CountDownTimer(SETTINGS.gameDuration, 1000) {
+		timer = new CountDownTimer(SETTINGS.gameDuration, 1000) {
 		     public void onTick(long millisUntilFinished) {
 		    	 setTime(SETTINGS.gameDuration - ElapsedTime);
 		    	 ElapsedTime+=1000;
 		     }
-		     public void onFinish() {if(active)endGame();}
+		     public void onFinish() {
+		    	 setTime(0);
+	    		 if(SETTINGS.singlePlayer)
+	    			 endGame();
+	    		 else
+	    			 new ClientConnectorTask().execute("timeOut:" + newGame.getMap().myPlayer.id+","+ newGame.getMap().myPlayer.getScore() ,"died");	 
+		     }		
 		  }.start();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+	
 
 	private void initButtons(){
 		LinearLayout gameLayout = (LinearLayout)findViewById(R.id.gameFrame);
@@ -102,8 +108,24 @@ public class MainActivity extends Activity {
 				newGame.placeBomb();
 			}
 		});
+		Button quitBtn = (Button) findViewById(R.id.quitBtn);
+		quitBtn.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				myVib.vibrate(20);
+				newGame.quitGame();
+			}
+		});
+		
+		Button pauseBtn = (Button) findViewById(R.id.pauseBtn);
+		pauseBtn.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				myVib.vibrate(20);
+				newGame.pauseGame();
+			}
+		});
 	}
-	
 	public void setScore(final int val){
 		runOnUiThread(new Runnable() {
 		     @Override
@@ -133,26 +155,47 @@ public class MainActivity extends Activity {
 		});
 		
 	 }
+	
+	public void makeBomb(final String[] args){
+		runOnUiThread(new Runnable() {
+		  public void run() {
+			  newGame.getMap().placeBombMultiplayer(args);
+		  }
+		});
+	}
+	
 	public void endGame(){
 		finish();
 	}
-	
-    @Override
-    public void onStart() {
-       super.onStart();
-       active = true;
-    } 
 
     @Override
     public void onStop() {
        super.onStop();
-       active = false;
+       timer.cancel();
     }
     
     @Override
     public void onPause() {
        super.onStop();
-       active = false;
+       timer.cancel();
     }
+
+	public void endGame(final String[] args) {
+		final Context ctx = this;
+		timer.cancel();
+		runOnUiThread(new Runnable() {
+			  public void run() {
+				  AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+				    alert.setTitle("Game Over");
+				    alert.setMessage(args[0]+" wins with " + args[1] + " points.");
+
+				    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int whichButton) {
+				           finish();
+				        }
+				    });
+				    alert.show();
+			}});
+	}
     
 }

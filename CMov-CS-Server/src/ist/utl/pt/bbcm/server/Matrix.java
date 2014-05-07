@@ -35,6 +35,7 @@ public class Matrix {
 	}
 
 	private void createMap(LEVELS mapContent) {
+		mapMatrix = null;
 		String[] totalRows = mapContent.getMap().split("\n");
 		int numCols = totalRows.length;
 		int numRows = totalRows[0].length();
@@ -121,33 +122,50 @@ public class Matrix {
 			}
 		}
 		if (!msgToSendToPlayers.equals("moveRobots:")) {
-			Message.sendToAllPlayers(msgToSendToPlayers);
-			int numAcks = 0;
-			int activePlayers = Main.getPlayersAlive();
-			while (numAcks < activePlayers) {
-				Socket clientSocket;
-				try {
-					clientSocket = Main.ackSocket.accept();
-					ObjectInputStream ois = new ObjectInputStream(
-							clientSocket.getInputStream());
-					String message = (String) ois.readObject();
-					String[] msg = message.split(":");
-					if (msg[0].equals("ack")) {
-						numAcks++;
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-			for (int i = 0; i < inicio.size(); i++) {
-				movePos(inicio.get(i), destino.get(i));
-			}
+			waitForPlayersAcknowledge(msgToSendToPlayers, inicio, destino);
 		}
 		return msgToSendToPlayers;
+	}
+
+	private static void waitForPlayersAcknowledge(String msgToSendToPlayers,
+			ArrayList<int[]> inicio, ArrayList<int[]> destino) {
+		Message.sendToAllPlayers(msgToSendToPlayers);
+		int numAcks = 0;
+		int activePlayers = Server.getPlayersAlive();
+		while (numAcks < activePlayers) {
+			Socket clientSocket;
+			try {
+				clientSocket = Server.ackSocket.accept();
+				ObjectInputStream ois = new ObjectInputStream(
+						clientSocket.getInputStream());
+				String message = (String) ois.readObject();
+				String[] msg = message.split(":");
+				if (msg[0].equals("ack")) {
+					numAcks++;
+				}
+			} catch (IOException e) {
+			} catch (ClassNotFoundException e) {}
+		}
+		for (int i = 0; i < inicio.size(); i++) {
+			movePos(inicio.get(i), destino.get(i));
+		}
+	}
+
+	public static void placeBomb(String x, String y) {
+		int mx = Integer.parseInt(x);
+		int my = Integer.parseInt(y);
+		mapMatrix[mx][my] = 'B';
+	}
+
+	public static void placeExplosion(String x, String y) {
+		int mx = Integer.parseInt(x);
+		int my = Integer.parseInt(y);
+		mapMatrix[mx][my] = 'E';
+	}
+
+	public static void removeExplosion(String x, String y) {
+		int mx = Integer.parseInt(x);
+		int my = Integer.parseInt(y);
+		mapMatrix[mx][my] = 'f';
 	}
 }

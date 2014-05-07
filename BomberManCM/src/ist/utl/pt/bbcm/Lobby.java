@@ -10,11 +10,14 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Enumeration;
+
+import org.apache.http.conn.util.InetAddressUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -40,8 +43,8 @@ public class Lobby extends Activity {
 	}
 
 	private void sendLoginRequest() {
-		new ClientConnectorTask().execute("login:"+SETTINGS.playerName+",20,20," + getLocalIpAddress()
-				+ "," + PORT);
+		new ClientConnectorTask().execute("login:" + SETTINGS.playerName
+				+ ",20,20," + getLocalIpAddress() + "," + PORT);
 	}
 
 	private void waitingForPlayers() {
@@ -57,63 +60,68 @@ public class Lobby extends Activity {
 						String[] sliptedString = receivedString.split(":");
 						String message = sliptedString[0];
 						if (message.equals("playerLogin")) {
-							numPlayers++;
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									if (numPlayers == 1) {
-										TextView tv = (TextView) findViewById(R.id.waitingP1);
-										tv.setText("Connected!");
-										tv.setTextColor(Color.rgb(0, 120, 0));
-									} else if (numPlayers == 2) {
-										TextView tv = (TextView) findViewById(R.id.waitingP2);
-										tv.setText("Connected!");
-										tv.setTextColor(Color.rgb(0, 120, 0));
-									}
-								}
-							});
+							Log.e("DEBUG", "Apanhei player login!");
+							newPlayerLoggedIn(sliptedString[1]);
 						} else if (message.contains("startGame")) {
-							String[] args = sliptedString[1].split(",");
-							SETTINGS.myPlayer = args[0];
-							SETTINGS.numPlayers = Integer.parseInt(args[1]);
-							Log.w("D: SETTINGS",""+SETTINGS.myPlayer+","+SETTINGS.numPlayers);
-							Intent intent = new Intent(context,
-									ist.utl.pt.bbcm.MainActivity.class);
-							startActivity(intent);
-							finish();
-							overridePendingTransition(R.anim.fade_out,
-									R.anim.fade_in);
+							goToNewGame(sliptedString);
+							receiverSocket.close();
 							break;
-						}else if (message.contains("settings")) {
+						} else if (message.contains("settings")) {
 							String[] args = sliptedString[1].split(",");
 							updateSettings(args);
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
 					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
+						Log.e("ERROR", "class received is unknown!");
 					}
-				}
-				try {
-					receiverSocket.close();
-				} catch (IOException e) {
 				}
 				return null;
 			}
 
+			private void newPlayerLoggedIn(final String name) {
+				numPlayers++;
+				Log.e("DEBUG", "Antes do runnable!");
+				final TextView tv1 = (TextView) findViewById(R.id.waitingP1);
+				final TextView tv2 = (TextView) findViewById(R.id.waitingP2);
+				final TextView tv3 = (TextView) findViewById(R.id.waitingP3);
+				final String message = "Player "+name+" Connected!";
+				Handler handler = new Handler(Looper.getMainLooper());
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						if (numPlayers == 1) {
+							tv1.setText(message);
+							tv1.setTextColor(Color.rgb(0, 120, 0));
+						} else if (numPlayers == 2) {
+							tv2.setText(message);
+							tv2.setTextColor(Color.rgb(0, 120, 0));
+						} else if (numPlayers == 3) {
+							tv3.setText(message);
+							tv3.setTextColor(Color.rgb(0, 120, 0));
+						}
+					}
+				});
+			}
+
+			private void goToNewGame(String[] sliptedString) {
+				String[] args = sliptedString[1].split(",");
+				SETTINGS.myPlayer = args[0];
+				SETTINGS.numPlayers = Integer.parseInt(args[1]);
+				finish();
+				Intent intent = new Intent(context,
+						ist.utl.pt.bbcm.MainActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.fade_out,
+						R.anim.fade_in);
+			}
 
 			@Override
-			protected void onPostExecute(final Void result) {
-				try {
-					receiverSocket.close();
-				} catch (IOException e) {
-				}
-			}
+			protected void onPostExecute(final Void result) {}
 		}.execute();
+
 	}
 
 	private void updateSettings(String[] args) {
-		Log.w("UPDATING SETTINGS", "pts:" + Integer.parseInt(args[0]));
 		SETTINGS.bombTimer = Integer.parseInt(args[2]);
 		SETTINGS.explosionDuration = Integer.parseInt(args[4]);
 		SETTINGS.explosionRange = Integer.parseInt(args[3]);
@@ -122,13 +130,14 @@ public class Lobby extends Activity {
 		SETTINGS.ptsPerPlayer = Integer.parseInt(args[7]);
 		SETTINGS.robotSpeed = Integer.parseInt(args[5]);
 		SETTINGS.ptsPerRobot = Integer.parseInt(args[6]);
-		Log.w("UPDATED SETTINGS", "pts:" + SETTINGS.ptsPerRobot);
 	}
-	
+
 	private void createServerSocket() {
 		try {
-				receiverSocket = new ServerSocket(PORT);
+			receiverSocket = new ServerSocket(PORT);
+			receiverSocket.setReuseAddress(true);
 		} catch (IOException e) {
+			Log.e("ERROR","Cannot create a new socket, port already in use.");
 		}
 	}
 
@@ -140,28 +149,35 @@ public class Lobby extends Activity {
 				for (Enumeration<InetAddress> enumIpAddr = intf
 						.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
-					if (!inetAddress.isLoopbackAddress()) {
-						return inetAddress.getHostAddress().toString();
+					String ipv4;
+					// for getting IPV4 format
+					if (!inetAddress.isLoopbackAddress()
+							&& InetAddressUtils
+									.isIPv4Address(ipv4 = inetAddress
+											.getHostAddress())) {
+						return ipv4;
 					}
 				}
 			}
-		} catch (SocketException ex) {
-			Log.e("GETLOCALIP", ex.toString());
+		} catch (Exception ex) {
+			Log.e("IP Address", ex.toString());
 		}
 		return null;
 	}
 
-	public void playerReady(View view){
+	public void playerReady(View view) {
 		new ClientConnectorTask().execute("ready:");
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		try {
 			receiverSocket.close();
-			finish();
-	} catch (IOException e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finish();
 	}
-	}
-	
+
 }

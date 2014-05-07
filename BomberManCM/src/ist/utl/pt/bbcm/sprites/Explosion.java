@@ -67,7 +67,8 @@ public class Explosion implements Sprite {
 	public void clean() {
 		Sprite[][] matrix = gameView.getMap().getMapMatrix();
 		matrix[x/32][y/32] = new EmptySpace(gameView,0,0);
-		new ClientConnectorTask().execute("removeExplosion:"+(x/32)+","+(y/32),"Explosion");
+		if(!SETTINGS.singlePlayer)
+			new ClientConnectorTask().execute("removeExplosion:"+(x/32)+","+(y/32),"Explosion");
 	}
 	
 	@Override

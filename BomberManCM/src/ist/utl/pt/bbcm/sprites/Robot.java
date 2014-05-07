@@ -56,6 +56,17 @@ public class Robot implements Sprite , Killable, Moveable{
 			Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 			Rect dst = new Rect(x, y, x + width, y + height);
 			canvas.drawBitmap(bmp, src, dst, null);
+			Map map = gameView.getMap();
+			int posMatrixX = this.getMatrixX();
+			int posMatrixY = this.getMatrixY();
+			int playerX = map.myPlayer.getMatrixX();
+			int playerY = map.myPlayer.getMatrixY();
+			
+			if(posMatrixX == playerX && posMatrixY == playerY && map.myPlayer.isAlive){
+				map.myPlayer.kill();
+				if(!SETTINGS.singlePlayer)
+					new ClientConnectorTask().execute("playerDied:" + map.myPlayer.id + "," + map.myPlayer.getScore() ,"died");
+			}
 		}
 	}
 
@@ -71,18 +82,12 @@ public class Robot implements Sprite , Killable, Moveable{
 	
 	@Override
 	public void moveRandom() {
-		Map map = gameView.getMap();
 		DIRECTION direction = DIRECTION.randomDir();
 		int posMatrixX = this.getMatrixX();
 		int posMatrixY = this.getMatrixY();
-		int playerX = map.getPlayerPosX();
-		int playerY = map.getPlayerPosY();
 		int posNextMatrixX = this.getMatrixX() + direction.x;
 		int posNextMatrixY = this.getMatrixY() + direction.y;
 		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY) && this.canMove()){
-			if(posMatrixX == playerX && posMatrixY == playerY){
-				map.killPlayer();
-			}
 			int tmpx = SETTINGS.robotSpeed * direction.x * CELL_SPACING/16;
 			int tmpy = SETTINGS.robotSpeed * direction.y * CELL_SPACING/16;
 			gameView.getMap().updateMatrix(this,posMatrixX,posMatrixY, posNextMatrixX, posNextMatrixY);
@@ -162,15 +167,9 @@ public class Robot implements Sprite , Killable, Moveable{
 
 	@Override
 	public void move(DIRECTION direction) {
-		Map map = gameView.getMap();
-		int posNextMatrixX = this.getMatrixX() + direction.x;
-		int posNextMatrixY = this.getMatrixY() + direction.y;
-		
 		if (!this.canMove()) {
 			this.fixPosition();
 		}
-		
-		killPlayers(map,posNextMatrixX,posNextMatrixY);
 		
 		int tmpx = SETTINGS.robotSpeed * direction.x * CELL_SPACING / 16;
 		int tmpy = SETTINGS.robotSpeed * direction.y * CELL_SPACING / 16;
@@ -186,18 +185,5 @@ public class Robot implements Sprite , Killable, Moveable{
 		}
 	}
 	
-	private void killPlayers(Map map, int posX, int posY) {
-		if(map.player1.getMatrixX() == posX && map.player1.getMatrixY()==posY){
-			new ClientConnectorTask().execute("playerDied:" + map.player1.id ,"died");
-			map.player1.kill();
-		}
-		if(map.player2.getMatrixX() == posX && map.player2.getMatrixY()==posY){
-			new ClientConnectorTask().execute("playerDied:" + map.player2.id ,"died");
-			map.player2.kill();
-		}
-		if(map.player3.getMatrixX() == posX && map.player3.getMatrixY()==posY){
-			new ClientConnectorTask().execute("playerDied:" + map.player3.id ,"died");
-			map.player3.kill();
-		}
-	}
+	
 }

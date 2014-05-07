@@ -1,6 +1,5 @@
 package ist.utl.pt.bbcm.sprites;
 
-
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import ist.utl.pt.bbcm.enums.SETTINGS;
@@ -16,7 +15,7 @@ import android.graphics.Rect;
 import android.util.Log;
 
 public class Player implements Sprite, Killable, Moveable, Walkable {
-	
+
 	// direction = 0 up, 1 left, 2 down, 3 right,
 	// animation = 3 back, 1 left, 0 front, 2 right
 	public String id;
@@ -34,35 +33,30 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	private int xSpeed;
 	private int ySpeed;
 	private boolean needsDrawing;
-	private boolean isAlive;
+	public boolean isAlive;
 	private GameView gameView;
 	private int score;
 	private DIRECTION nextMove;
 
-
-	
-
-
-	public Player(GameView gameView,int image, int x, int y, String id) {
+	public Player(GameView gameView, int image, int x, int y, String id) {
 		this.gameView = gameView;
-    	this.bmp = BitmapFactory.decodeResource(gameView.getResources(), image);
-    	this.setX(x);
-    	this.setY(y);
-        this.width = bmp.getWidth() /BMP_COLUMNS;
-        this.height = bmp.getHeight()/BMP_ROWS ;
-        this.xSpeed = 0;
-        this.ySpeed = 0;
-        this.needsDrawing = true;
-        this.isAlive = false;
-        this.score=10;
-        this.nextMove = null;
-        this.id = id;
+		this.bmp = BitmapFactory.decodeResource(gameView.getResources(), image);
+		this.setX(x);
+		this.setY(y);
+		this.width = bmp.getWidth() / BMP_COLUMNS;
+		this.height = bmp.getHeight() / BMP_ROWS;
+		this.xSpeed = 0;
+		this.ySpeed = 0;
+		this.needsDrawing = true;
+		this.isAlive = false;
+		this.score = 0;
+		this.nextMove = null;
+		this.id = id;
 	}
-
 
 	@Override
 	public void drawToCanvas(Canvas canvas) {
-		if(needsDrawing && isAlive){
+		if (needsDrawing && isAlive) {
 			updateSprite();
 			int srcX = currentFrame * width;
 			int srcY = getAnimationRow() * height;
@@ -76,12 +70,12 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	public void stopDrawing() {
 		this.needsDrawing = false;
 	}
-	
+
 	@Override
 	public void startDrawing() {
 		this.needsDrawing = true;
 	}
-	
+
 	private void updateSprite() {
 		if (numSteps > 0) {
 			setX(getX() + xSpeed);
@@ -89,35 +83,34 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 			setY(getY() + ySpeed);
 			numSteps -= Math.abs(ySpeed);
 			currentFrame = ++currentFrame % BMP_COLUMNS;
-		}else if(nextMove!=null){
-			Log.w("QUEUE", "Using next dir:" + nextMove.name() );
+		} else if (nextMove != null && SETTINGS.singlePlayer) {
+			Log.w("QUEUE", "Using next dir:" + nextMove.name());
 			this.move(nextMove);
 			nextMove = null;
 		}
 	}
-	
+
 	@Override
 	public void move(DIRECTION direction) {
 		int posNextMatrixX = this.getMatrixX() + direction.x;
 		int posNextMatrixY = this.getMatrixY() + direction.y;
-		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY)){
-			int tmpx = direction.x * CELL_SPACING/8;
-			int tmpy = direction.y * CELL_SPACING/8;
+		if (gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY)) {
 			if (this.canMove()) {
-				if(SETTINGS.singlePlayer){
+					int tmpx = direction.x * CELL_SPACING / 8;
+					int tmpy = direction.y * CELL_SPACING / 8;
 					numSteps = CELL_SPACING;
 					xSpeed = tmpx;
 					ySpeed = tmpy;
-				}else{
-					new ClientConnectorTask().execute("movePlayer:"+SETTINGS.myPlayer+","+direction.x+","+direction.y,"updatePlayerOnServer");
-				}
-			}else{
+					new ClientConnectorTask().execute("movePlayer:"
+							+ SETTINGS.myPlayer + "," + direction.x + ","
+							+ direction.y + "," + getX() +","+getY() , "updatePlayerOnServer");
+			} else {
 				Log.w("QUEUE", "ADDED dir:" + direction.name());
 				nextMove = direction;
 			}
 		}
 	}
-	
+
 	// direction = 0 up, 1 left, 2 down, 3 right,
 	// animation = 3 back, 1 left, 0 front, 2 right
 	private int getAnimationRow() {
@@ -127,54 +120,49 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	}
 
 	public int getMatrixX() {
-		return this.getX()/CELL_SPACING;
+		return this.getX() / CELL_SPACING;
 	}
 
 	public int getMatrixY() {
-		return this.getY()/CELL_SPACING;
+		return this.getY() / CELL_SPACING;
 	}
-	
-	public void kill(){
+
+	public void kill() {
 		this.isAlive = false;
 		this.stopDrawing();
 		gameView.endGame();
 	}
-	
-	public void spawn(){
+
+	public void spawn() {
 		this.isAlive = true;
 		this.startDrawing();
 	}
-
 
 	public int getX() {
 		return x;
 	}
 
-
 	public void setX(int x) {
 		this.x = x;
 	}
-
 
 	public int getY() {
 		return y;
 	}
 
-
 	public void setY(int y) {
 		this.y = y;
 	}
 
-
 	public boolean canMove() {
-		if (numSteps==0)
+		if (numSteps == 0)
 			return true;
 		else
 			return false;
 	}
-	
-	@Override 
-	public String toString(){
+
+	@Override
+	public String toString() {
 		return "P";
 	}
 
@@ -182,39 +170,42 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	public int getLoot() {
 		return SETTINGS.ptsPerPlayer;
 	}
-	
+
 	public int getScore() {
 		return score;
 	}
 
-
 	public void updateScore(int score) {
-		this.score += score;
+		this.score += score;	
 	}
-
 
 	@Override
 	public void moveRandom() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public void updateMultiplayerPos(DIRECTION direction){
-		int posNextMatrixX = this.getMatrixX() + direction.x;
-		int posNextMatrixY = this.getMatrixY() + direction.y;
-		if(gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY)){
-			int tmpx = direction.x * CELL_SPACING/8;
-			int tmpy = direction.y * CELL_SPACING/8;
-			if (this.canMove()) {
-					numSteps = CELL_SPACING;
-					xSpeed = tmpx;
-					ySpeed = tmpy;
-			}else{
-				Log.w("QUEUE", "ADDED dir:" + direction.name());
-				nextMove = direction;
-			}
+
+	public void updateMultiplayerPos(DIRECTION direction, String argX, String argY) {
+		int x = Integer.parseInt(argX);
+		int y = Integer.parseInt(argY);
+		int tmpx = direction.x * CELL_SPACING / 8;
+		int tmpy = direction.y * CELL_SPACING / 8;
+		if (!this.canMove()) {
+			this.fixPosition();
+		}else{
+			this.x = x;
+			this.y = y;
+		}
+		numSteps = CELL_SPACING;
+		xSpeed = tmpx;
+		ySpeed = tmpy;
+
+	}
+
+	private void fixPosition() {
+		while (numSteps != 0) {
+			updateSprite();
 		}
 	}
-	
 
 }

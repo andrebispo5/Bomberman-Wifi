@@ -3,6 +3,7 @@ package ist.utl.pt.bbcm;
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.map.Map;
+import ist.utl.pt.bbcm.networking.ClientConnectorTask;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -64,7 +65,7 @@ public class GameView extends SurfaceView {
 	protected void drawToCanvas(Canvas canvas) {
         canvas.drawColor(Color.BLACK);
         map.drawToCanvas(canvas);
-		this.refreshHUD(map.getPlayer1().getScore());
+		this.refreshHUD(map.myPlayer.getScore());
     }
     
     public void movePlayer(DIRECTION direction){
@@ -99,12 +100,9 @@ public class GameView extends SurfaceView {
 				gameLoopThread.setRunning(false);
 				gameLoopThread.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			communicationChannel.endGame();
-		}else{
-			
 		}
 	}
 
@@ -120,6 +118,45 @@ public class GameView extends SurfaceView {
 
 	public void killPlayer(String playerID) {
 		map.killPlayer(playerID);
+	}
+
+
+	public void placeBombMultiplayer(String[] args) {
+		communicationChannel.makeBomb(args);
+	}
+
+
+	public void endGame(String[] args) {
+		communicationChannel.endGame(args);		
+	}
+
+
+	public void giveLoot(String[] split) {
+		map.giveLoot(split);
+	}
+
+
+	public void quitGame() {
+		if(SETTINGS.singlePlayer){
+			this.endGame();
+		}else{
+			new ClientConnectorTask().execute("quitGame:"+map.myPlayer.id,"quit");
+		}
+	}
+
+
+	public void quitGame(String[] arg) {
+		communicationChannel.endGame();
+	}
+
+
+	public void pauseGame() {
+		map.killPlayer();
+	}
+
+
+	public void resumePlayer(String[] split) {
+		map.resumePlayer(split);
 	}
 
 	
