@@ -1,8 +1,6 @@
 package ist.utl.pt.bbcm;
 
 
-import java.io.IOException;
-
 import ist.utl.pt.bbcm.enums.SETTINGS;
 import android.os.Bundle;
 import android.app.Activity;

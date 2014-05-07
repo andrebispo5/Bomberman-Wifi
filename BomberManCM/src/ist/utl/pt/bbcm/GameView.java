@@ -12,7 +12,7 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView {
     private SurfaceHolder holder;
-    private GameLoopThread gameLoopThread;
+    public GameLoopThread gameLoopThread;
 	private Map map;
 	public float scaleDen;
 	public Context context;
@@ -37,21 +37,23 @@ public class GameView extends SurfaceView {
 
                  @Override
                  public void surfaceDestroyed(SurfaceHolder holder) {
-                        boolean retry = true;
-                        gameLoopThread.setRunning(false);
-                        while (retry) {
-                               try {
-                                     gameLoopThread.join();
-                                     retry = false;
-                               } catch (InterruptedException e) {
-                               }
-                        }
+//                        boolean retry = true;
+//                        gameLoopThread.setRunning(false);
+//                        while (retry) {
+//                               try {
+//                                     gameLoopThread.join();
+//                                     retry = false;
+//                               } catch (InterruptedException e) {
+//                               }
+//                        }
                  }
 
                  @Override
                  public void surfaceCreated(SurfaceHolder holder) {
-                        gameLoopThread.setRunning(true);
-                        gameLoopThread.start();
+                     try{
+                    	 gameLoopThread.setRunning(true);
+                    	 gameLoopThread.start();
+                     }catch (Exception e){}
                  }
 
                  @Override
@@ -63,9 +65,11 @@ public class GameView extends SurfaceView {
 
     
 	protected void drawToCanvas(Canvas canvas) {
+		try{
         canvas.drawColor(Color.BLACK);
         map.drawToCanvas(canvas);
 		this.refreshHUD(map.myPlayer.getScore());
+	}catch (Exception e){}
     }
     
     public void movePlayer(DIRECTION direction){
@@ -96,13 +100,7 @@ public class GameView extends SurfaceView {
 	
 	public void endGame() {
 		if(SETTINGS.singlePlayer){
-			try {
-				gameLoopThread.setRunning(false);
-				gameLoopThread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			communicationChannel.endGame();
+			communicationChannel.endGame(new String[]{map.myPlayer.id,String.valueOf(map.myPlayer.getScore())});
 		}
 	}
 

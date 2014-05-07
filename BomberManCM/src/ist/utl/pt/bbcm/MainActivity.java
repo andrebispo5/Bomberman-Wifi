@@ -2,6 +2,7 @@ package ist.utl.pt.bbcm;
 
 
 
+
 import ist.utl.pt.bbcm.enums.DIRECTION;
 import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
@@ -12,7 +13,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.Menu;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -168,17 +170,7 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
-    @Override
-    public void onStop() {
-       super.onStop();
-       timer.cancel();
-    }
     
-    @Override
-    public void onPause() {
-       super.onStop();
-       timer.cancel();
-    }
 
 	public void endGame(final String[] args) {
 		final Context ctx = this;
@@ -197,5 +189,40 @@ public class MainActivity extends Activity {
 				    alert.show();
 			}});
 	}
+	
+	@Override
+	public void onBackPressed() {
+		newGame.pauseGame();
+		Intent intent = new Intent(this, ist.utl.pt.bbcm.Menu.class);
+	    startActivity(intent);
+	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+	}
     
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.e("BACKGROUND", "fiz pause!");
+	}
+	@Override
+	public void onStart() {
+		super.onResume();
+		Log.e("BACKGROUND", "Fiz start!!");
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.e("BACKGROUND", "Fiz resume!!");
+	}
+	@Override
+	public void onRestart() {
+		super.onResume();
+		Log.e("BACKGROUND", "Fiz restart!!");
+	}
+	@Override
+	public void onStop() {
+		super.onStop();
+		timer.cancel();
+
+		Log.e("BACKGROUND", "Fiz stop!!");
+	}
 }
