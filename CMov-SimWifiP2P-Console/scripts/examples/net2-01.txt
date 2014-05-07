@@ -1,0 +1,24 @@
+# File: net2-01
+#
+#   Uses 2 devices (expects file net2.txt)
+#
+#   Shows how to create a group consisting of two nodes: A is the
+#   GO and B is the client. Upon commit, both nodes will be able to
+#   see each other (in range) and to talk to each other (in network).
+#   The nodes will be notified of both events (proximity and 
+#	connectivity) at the same time.
+#
+
+clear
+load net2
+
+# prologue
+
+commit
+wait 8
+
+# starts here
+
+move A (B)
+creategroup A (B)
+commit

@@ -1,0 +1,37 @@
+# File: net2-05
+#
+#   Uses 2 devices (expects file net2.txt)
+#
+#   Shows the effect of a client (node B) leaving a group temporarily by
+#   moving away from the GO (node A) until they stop seeing each other and
+#   returning to the GO's range after a while. The client is reinserted in
+#   the group. This procedure is done in three stages: first, the initial
+#   group setup; second, B moves away; third, B rejoins the group.
+#
+
+clear
+load net2
+
+# prologue
+
+commit
+wait 8
+
+# step 1
+
+move A (B)
+creategroup A (B)
+commit
+wait 6
+
+# step 2
+
+move B ()
+commit
+wait 6
+
+# step 3
+
+move B (A)
+joingroup B (A)
+commit

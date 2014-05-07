@@ -1,0 +1,48 @@
+# File: net3-02
+#
+#   Uses 3 devices (expects file net3.txt)
+#
+#   Shows how to progressively create a group of three nodes: A is the
+#   GO, B and C are the clients. This is done in five steps. First, A
+#   moves close to B. Second, A creates a group. Third, B joins the group.
+#   Four, C moves close to A. Fifth, C joins the group.
+# 
+
+clear
+load net3
+
+# prologue
+
+commit
+wait 8
+
+# step 1
+
+move A (B)
+commit
+wait 5
+
+# step 2
+
+creategroup A ()
+commit
+wait 5
+
+# step 3
+
+joingroup B (A)
+commit
+wait 5
+
+# step 4
+
+move C (A)
+commit
+wait 5
+
+# step 5
+
+joingroup C (A)
+commit
+wait 5
+

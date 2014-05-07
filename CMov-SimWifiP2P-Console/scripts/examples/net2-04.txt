@@ -1,0 +1,33 @@
+# File: net2-04
+#
+#   Uses 2 devices (expects file net2.txt)
+#
+#   Shows the effect of a GO (node B) destroying a group. The group has
+#   two nodes: A is the client and B is the GO. There are two commit
+#	steps. In the first step, both nodes are notified of their proximity and
+#	connectivity. In the second step (after 5 seconds), node B leaves the
+#   group and both nodes are notified of the change in network membership.
+#   Nevertheless, they remain peers of each other.
+#
+
+clear
+load net2
+
+# prologue
+
+commit
+wait 8
+
+# step 1
+
+move A (B)
+creategroup B (A)
+commit
+wait 5
+
+# step 2
+
+deletegroup B
+print groups
+print neighbors
+commit

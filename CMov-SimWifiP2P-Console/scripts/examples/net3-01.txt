@@ -1,0 +1,24 @@
+# File: net3-01
+#
+#   Uses 3 devices (expects file net3.txt)
+#
+#   Shows how to create a group consisting of three nodes: A is the
+#   GO, B and C are the clients. Upon commit, both nodes will be able to
+#   see each other (in range) and to talk to each other (in network).
+#   The nodes will be notified of both events (proximity and 
+#	connectivity) at the same time.
+# 
+
+clear
+load net2
+
+# prologue
+
+commit
+wait 8
+
+# step 1
+
+move A (B,C)
+creategroup A (B,C)
+commit

@@ -1,0 +1,81 @@
+SCRIPTS FOR WDSIM
+=================
+
+This directory is a repository of simulation script files that the WDSim
+console can locate automatically. To execute a script, launch the WDSim
+console and type:
+
+>l <script_name>
+	
+The script_name input is the script filename, excluding its path and
+extension. For example, to run the script examples/net2-01.txt type:
+
+>l net2-01
+
+The WDSim console is able to automatically locate script files located 
+in the "scripts" directory, or in one of its subdirectories (with the
+exception of the "obsolete" subdirectory). There are five subdirectories
+containing WDSim scripts:
+
+devices/
+
+	Contains fragments of simulation scripts that describe specific
+	device configurations. The goal of having such fragments is to
+	separate the specification of the devices from the way in which
+	they move, connect, and form a dynamically changing virtual topology.
+	A complete simulation script can then include one of these fragments
+	and add only the WDSim commands that describe the formation of the
+	topology. Each fragment defines a certain number of devices and
+	specifies their respective names and addresses using the "register"
+	command. A fragment can be included in other scripts with the command
+	"load".
+	
+examples/
+
+	Contains a set of simulation script examples that are meant to be used
+	with the SimpleChat application. The examples are organized in terms 
+	of the complexity of the topology that is simulated, regarding both 
+	the number of nodes and the specific actions done by the devices (e.g.,
+	leaving the network, creating a group, etc.). Their names reflect the
+	number of devices that are simulated (e.g., net2-* simulates a network
+	with 2 devices, net3-* a network with 3 devices, and so on). Each script
+	includes a specific device setup from another file (e.g., net2-* scripts
+	include file net2.txt). This file is a copy of a file from the "devices"
+	subdirectory. Changing the details of a device (e.g., IP addresses) can
+	be done easily by updating the local file.
+
+	In each example, the simulation evolves as a sequence of steps. These
+	steps consist of changes to the topology followed by a "commit" and a
+	"wait" command. The wait command takes the number of seconds that
+	the console should pause until it moves to interpreting the next
+	command. In some times, it may be useful to override "wait" to enter
+	iterative mode, i.e., to pause until the user presses Enter. This
+	feature could give the user more control of the evolution of the
+	simulation. To override the "wait" instructions without having to
+	change the script, execute "set wait.iterative" on the console before
+	loading the scripts.
+
+	One last note. Each example has a prologue, aimed at clearing the 
+	state of the emulators from previous simulation trials. The prologue
+	simply uploads empty group and peer sets to the emulators. Running
+	the prologue, however, can be a bit too slow and can be removed or
+	commented in order to speed up the simulation.
+
+usecases/
+
+	Contains a few scripts illustrating the three use cases that are
+	relevant in the context of the NearTweet project. Use case 1: in a 
+	single group, clients can leave and enter. Use case 2: in a single group,
+	the GO can leave and rejoin. Use case 3: two groups that are bridged by
+	one client device. Naturally, more scripts can and should be added.
+
+testing/
+
+	This subdirectory is for keeping the experimental scripts that are 
+	written when developing and testing WDSim applications.
+
+obsolete/
+
+	Contains the scripts that were shipped in the first release of WDSim.
+	These scripts, however, are no longer compatible to the current WDSim
+	version.

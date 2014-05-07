@@ -1,0 +1,39 @@
+# File: uc2-01
+#
+#   Uses 3 devices (expects file devices3-1.txt)
+#
+#   Shows the effect of a GO (node A) leaving a group temporarily by
+#   moving away from the other clients (nodes B and C) until the group
+#	breaks. A new group will be formed between nodes B and C, B being the
+#	GO node. Before A moves away, we introduce an iterative wait to give
+#	the user the necessary time to advertise to the network that the group
+#	will be dissolved. This could be done by allowing the user to press
+#	a button, and the GO could initiate a goodbye protocol with the clients.
+#
+
+clear
+load devices3-1
+
+# prologue
+
+commit
+wait 8
+
+# step 1
+
+move A (B,C)
+move B (A,C)
+creategroup A (B,C)
+commit
+wait
+
+# step 2
+
+move A ()
+commit
+wait 6
+
+# step 3
+
+creategroup B (C)
+commit

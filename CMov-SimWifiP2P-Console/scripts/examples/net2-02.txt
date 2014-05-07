@@ -1,0 +1,33 @@
+# File: net2-02
+#
+#   Uses 2 devices (expects file net2.txt)
+#
+#   Shows how to create a group consisting of two nodes and done in two
+#   stages. First, they move to each other's range and are notified of 
+#   their mutual presence. Second, they form a group: A is the GO, and B
+#   is the client. There's a waiting period of 5 seconds between stages.
+#	Note that after the second stage, in addition to the network membership
+#	change event, node A is notified of the group ownership too, but not
+#   node B.
+#
+
+clear
+load net2
+
+# prologue
+
+commit
+wait 8
+
+# stage 1
+
+move A (B)
+print neighbors
+commit
+wait 5
+
+# stage 2
+
+creategroup A (B)
+print groups
+commit

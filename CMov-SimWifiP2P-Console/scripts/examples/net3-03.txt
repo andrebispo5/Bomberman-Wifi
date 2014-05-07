@@ -1,0 +1,48 @@
+# File: net3-03
+#
+#   Uses 3 devices (expects file net3.txt)
+#
+#   Shows the effect of two clients (B and C) leaving a group temporarily by
+#   moving away from the GO (node A) until they stop seeing each other and
+#   returning to the GO's range after a while. The clients are reinserted in
+#   the group. This procedure occurs in multiple steps.
+#
+
+clear
+load net2
+
+# prologue
+
+commit
+wait 8
+
+# step 1
+
+move A (B,C)
+creategroup A (B,C)
+commit
+wait 5
+
+# step 2
+
+move B ()
+commit
+wait 5
+
+# step 3
+
+move C ()
+commit
+wait 5
+
+# step 4
+
+move B (A)
+joingroup B (A)
+commit
+
+# step 5
+
+move C (A)
+joingroup C (A)
+commit

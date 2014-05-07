@@ -1,0 +1,10 @@
+# Test 1
+clear
+load t
+set wait.iterative
+
+move A (B,C)
+creategroup A (B,C)
+
+print neighbors
+print groups

@@ -1,0 +1,34 @@
+# File: net2-03
+#
+#   Uses 2 devices (expects file net2.txt)
+#
+#   Shows the effect of a client (node B) leaving a group. The group has
+#   two nodes: A is the GO and B is the client. There are two commit
+#	steps. In the first step, both nodes are notified of their proximity and
+#	connectivity. In the second step (after 5 seconds), node B leaves the
+#   group and both nodes are notified of the change in network membership.
+#   Nevertheless, they remain peers of each other.
+#
+
+clear
+load net2
+
+# prologue
+
+commit
+wait 8
+
+# step 1
+
+move A (B)
+creategroup A (B)
+commit
+wait 5
+
+# step 2
+
+leavegroup B (A)
+print groups
+print neighbors
+commit
+

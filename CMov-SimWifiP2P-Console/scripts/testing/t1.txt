@@ -1,0 +1,9 @@
+# Test 1
+clear
+load t
+
+move A (B,C)
+creategroup A (B,C)
+
+print neighbors
+print groups
