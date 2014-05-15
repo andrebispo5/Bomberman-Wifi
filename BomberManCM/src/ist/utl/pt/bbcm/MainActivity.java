@@ -73,7 +73,6 @@ public class MainActivity extends Activity  {
 		initButtons();
 		ElapsedTime=0;
 		initTimer();
-		
 	}
 	
 	private void initTimer() {
