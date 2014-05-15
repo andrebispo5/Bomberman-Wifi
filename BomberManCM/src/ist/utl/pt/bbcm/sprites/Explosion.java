@@ -1,13 +1,16 @@
 package ist.utl.pt.bbcm.sprites;
 
+import ist.utl.pt.bbcm.ApplicationContext;
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
+import ist.utl.pt.bbcm.enums.MODE;
 import ist.utl.pt.bbcm.enums.SETTINGS;
+import ist.utl.pt.bbcm.interfaces.Sprite;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
-import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
 
 public class Explosion implements Sprite {
@@ -67,8 +70,8 @@ public class Explosion implements Sprite {
 	public void clean() {
 		Sprite[][] matrix = gameView.getMap().getMapMatrix();
 		matrix[x/32][y/32] = new EmptySpace(gameView,0,0);
-		if(!SETTINGS.singlePlayer)
-			new ClientConnectorTask().execute("removeExplosion:"+(x/32)+","+(y/32),"Explosion");
+		if(SETTINGS.mode == MODE.MLP)
+			new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"removeExplosion:"+(x/32)+","+(y/32),"Explosion");
 	}
 	
 	@Override

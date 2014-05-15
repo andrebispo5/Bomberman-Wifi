@@ -90,7 +90,14 @@ public class SimWifiP2pInfo implements Serializable {
 		inGroup.remove(mDeviceName);
 		return inGroup;
 	}
-
+	
+	public String getGO(){
+		String GO = null;
+		if(mHomeGroups.size()>0)
+			GO = (String) mHomeGroups.toArray()[0];
+		return GO;
+	}
+	
 	public void print() {
 		
 		Log.d(TAG, "DeviceName:" + mDeviceName);
@@ -99,6 +106,7 @@ public class SimWifiP2pInfo implements Serializable {
 		Log.d(TAG, "IsGO:" + ((mIsGo)?"Yes":"No"));
 		Log.d(TAG, "GroupClients:" + mGroupClients.toString());
 		Log.d(TAG, "Groups:" + mGroups.toString());
+		Log.d(TAG, "GO:" + getGO());
 	}
 
 	/*

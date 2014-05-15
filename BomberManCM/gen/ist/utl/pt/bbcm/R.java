@@ -13,34 +13,34 @@ public final class R {
         public static final int fade_out=0x7f040001;
     }
     public static final class array {
-        public static final int duration_arrays=0x7f070001;
-        public static final int explosion_range_arrays=0x7f070004;
-        public static final int explosion_timer_arrays=0x7f070003;
-        public static final int level_arrays=0x7f070000;
-        public static final int player_points_arrays=0x7f070007;
-        public static final int robot_points_arrays=0x7f070006;
-        public static final int robot_speed_arrays=0x7f070005;
-        public static final int timer_arrays=0x7f070002;
+        public static final int duration_arrays=0x7f080001;
+        public static final int explosion_range_arrays=0x7f080004;
+        public static final int explosion_timer_arrays=0x7f080003;
+        public static final int level_arrays=0x7f080000;
+        public static final int player_points_arrays=0x7f080007;
+        public static final int robot_points_arrays=0x7f080006;
+        public static final int robot_speed_arrays=0x7f080005;
+        public static final int timer_arrays=0x7f080002;
     }
     public static final class attr {
     }
     public static final class dimen {
-        public static final int Player=0x7f050003;
+        public static final int Player=0x7f070003;
         /** 
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw600dp devices (e.g. 7" tablets) here.
     
          */
-        public static final int Title=0x7f050002;
-        public static final int Wait=0x7f050004;
+        public static final int Title=0x7f070002;
+        public static final int Wait=0x7f070004;
         /**  Default screen margins, per the Android Design guidelines. 
 
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f050000;
-        public static final int activity_vertical_margin=0x7f050001;
+        public static final int activity_horizontal_margin=0x7f070000;
+        public static final int activity_vertical_margin=0x7f070001;
     }
     public static final class drawable {
         public static final int bomb=0x7f020000;
@@ -75,70 +75,75 @@ public final class R {
         public static final int wall=0x7f02001d;
     }
     public static final class id {
-        public static final int HUD=0x7f0a0007;
+        public static final int HUD=0x7f0a000b;
         public static final int Title=0x7f0a0000;
-        public static final int action_settings=0x7f0a0024;
-        public static final int bombBtn=0x7f0a0012;
-        public static final int bombTimerOption=0x7f0a001c;
-        public static final int button2=0x7f0a0023;
-        public static final int downBtn=0x7f0a0010;
-        public static final int exitBtn=0x7f0a0016;
-        public static final int explosionRangeOption=0x7f0a001e;
-        public static final int explosionTimerOption=0x7f0a001d;
-        public static final int gameDurationOption=0x7f0a001b;
-        public static final int gameFrame=0x7f0a000c;
-        public static final int gameLayout=0x7f0a0006;
-        public static final int gameTime=0x7f0a000a;
-        public static final int imageView1=0x7f0a0015;
-        public static final int leftBtn=0x7f0a0011;
-        public static final int levelOption=0x7f0a001a;
-        public static final int nameOption=0x7f0a0022;
-        public static final int nameTxt=0x7f0a0008;
-        public static final int newBtn=0x7f0a0017;
-        public static final int padFrame=0x7f0a000d;
-        public static final int pauseBtn=0x7f0a0014;
-        public static final int playerPointsOption=0x7f0a0021;
+        public static final int WDTitle=0x7f0a0006;
+        public static final int WDwaiting=0x7f0a0008;
+        public static final int action_settings=0x7f0a0028;
+        public static final int bombBtn=0x7f0a0016;
+        public static final int bombTimerOption=0x7f0a0020;
+        public static final int button2=0x7f0a0027;
+        public static final int connectBtn=0x7f0a0009;
+        public static final int downBtn=0x7f0a0014;
+        public static final int exitBtn=0x7f0a001a;
+        public static final int explosionRangeOption=0x7f0a0022;
+        public static final int explosionTimerOption=0x7f0a0021;
+        public static final int gameDurationOption=0x7f0a001f;
+        public static final int gameFrame=0x7f0a0010;
+        public static final int gameLayout=0x7f0a000a;
+        public static final int gameTime=0x7f0a000e;
+        public static final int imageView1=0x7f0a0019;
+        public static final int leftBtn=0x7f0a0015;
+        public static final int levelOption=0x7f0a001e;
+        public static final int loader=0x7f0a0007;
+        public static final int nameOption=0x7f0a0026;
+        public static final int nameTxt=0x7f0a000c;
+        public static final int newBtn=0x7f0a001b;
+        public static final int padFrame=0x7f0a0011;
+        public static final int pauseBtn=0x7f0a0018;
+        public static final int playerPointsOption=0x7f0a0025;
         public static final int playersTV=0x7f0a0002;
-        public static final int playersTxt=0x7f0a000b;
-        public static final int quitBtn=0x7f0a0013;
-        public static final int rightBtn=0x7f0a000e;
-        public static final int robotPointsOption=0x7f0a0020;
-        public static final int robotSpeedOption=0x7f0a001f;
-        public static final int scoreTxt=0x7f0a0009;
-        public static final int setingsLayout=0x7f0a0019;
-        public static final int settingsBtn=0x7f0a0018;
+        public static final int playersTxt=0x7f0a000f;
+        public static final int quitBtn=0x7f0a0017;
+        public static final int rightBtn=0x7f0a0012;
+        public static final int robotPointsOption=0x7f0a0024;
+        public static final int robotSpeedOption=0x7f0a0023;
+        public static final int scoreTxt=0x7f0a000d;
+        public static final int setingsLayout=0x7f0a001d;
+        public static final int settingsBtn=0x7f0a001c;
         public static final int startGameBtn=0x7f0a0003;
-        public static final int upBtn=0x7f0a000f;
+        public static final int upBtn=0x7f0a0013;
         public static final int waitingP1=0x7f0a0001;
         public static final int waitingP2=0x7f0a0004;
         public static final int waitingP3=0x7f0a0005;
     }
     public static final class layout {
         public static final int game_lobby=0x7f030000;
-        public static final int game_screen=0x7f030001;
-        public static final int main_menu=0x7f030002;
-        public static final int settings_screen=0x7f030003;
+        public static final int game_lobby_wdsim=0x7f030001;
+        public static final int game_screen=0x7f030002;
+        public static final int main_menu=0x7f030003;
+        public static final int settings_screen=0x7f030004;
     }
     public static final class menu {
         public static final int main=0x7f090000;
     }
     public static final class string {
-        public static final int Bomb=0x7f060007;
-        public static final int action_settings=0x7f060001;
-        public static final int app_name=0x7f060000;
-        public static final int bomb_timer_prompt=0x7f06000a;
-        public static final int downArrow=0x7f060003;
-        public static final int explosion_range_prompt=0x7f06000c;
-        public static final int explosion_timer_prompt=0x7f06000b;
-        public static final int game_duration_prompt=0x7f060009;
-        public static final int hello_world=0x7f060002;
-        public static final int leftArrow=0x7f060005;
-        public static final int level_prompt=0x7f060008;
-        public static final int player_points_prompt=0x7f06000f;
-        public static final int rightArrow=0x7f060006;
-        public static final int robot_points_prompt=0x7f06000e;
-        public static final int robot_speed_prompt=0x7f06000d;
-        public static final int upArrow=0x7f060004;
+        public static final int Bomb=0x7f050007;
+        public static final int action_settings=0x7f050001;
+        public static final int app_name=0x7f050000;
+        public static final int bomb_timer_prompt=0x7f05000a;
+        public static final int downArrow=0x7f050003;
+        public static final int explosion_range_prompt=0x7f05000c;
+        public static final int explosion_timer_prompt=0x7f05000b;
+        public static final int game_duration_prompt=0x7f050009;
+        public static final int hello_world=0x7f050002;
+        public static final int leftArrow=0x7f050005;
+        public static final int level_prompt=0x7f050008;
+        public static final int player_points_prompt=0x7f05000f;
+        public static final int rightArrow=0x7f050006;
+        public static final int robot_points_prompt=0x7f05000e;
+        public static final int robot_speed_prompt=0x7f05000d;
+        public static final int upArrow=0x7f050004;
     }
     public static final class style {
         /** 
@@ -161,11 +166,33 @@ public final class R {
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
+
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        
+
+        Base application theme for API 11+. This theme completely replaces
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.
+    
+ API 11 theme customizations can go here. 
+
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    
+ API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f060000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
+ Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
+        public static final int AppTheme=0x7f060001;
     }
 }

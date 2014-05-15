@@ -1,22 +1,34 @@
 package ist.utl.pt.bbcm.map;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+
+import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
+import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocketServer;
+
+import ist.utl.pt.bbcm.ApplicationContext;
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.MODE;
 import ist.utl.pt.bbcm.enums.SETTINGS;
+import ist.utl.pt.bbcm.interfaces.Moveable;
+import ist.utl.pt.bbcm.interfaces.Sprite;
+import ist.utl.pt.bbcm.interfaces.Walkable;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
+import ist.utl.pt.bbcm.networking.KnownPorts;
 import ist.utl.pt.bbcm.sprites.Bomb;
 import ist.utl.pt.bbcm.sprites.EmptySpace;
 import ist.utl.pt.bbcm.sprites.Obstacle;
 import ist.utl.pt.bbcm.sprites.Player;
 import ist.utl.pt.bbcm.sprites.Robot;
-import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
-import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
-import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
 import ist.utl.pt.bbcm.sprites.Wall;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.util.Log;
 
 
@@ -33,6 +45,7 @@ public class Map {
 	private int lastTransX;
 	private int lastTransY;
 	public float scaleDensity;
+	private ApplicationContext appCtx;
     
 	public Map(GameView gameView) {
 		super();
@@ -40,9 +53,10 @@ public class Map {
         this.createMap();
         this.setMyPlayer();
         this.spawnPlayers();
+        appCtx = (ApplicationContext)gameView.mainActivityContext.getApplicationContext();
 	}
 
-	private void spawnPlayers() {
+	public void spawnPlayers() {
 		if(SETTINGS.numPlayers==1){
 			player1.spawn();
 			player4 = new Player(gameView,R.drawable.player4,0,0,"p4");
@@ -63,7 +77,7 @@ public class Map {
 		} 
 	}
 
-	private void setMyPlayer() {
+	public void setMyPlayer() {
 		if(SETTINGS.myPlayer.equals("p1"))
 			myPlayer = player1;
 		else if(SETTINGS.myPlayer.equals("p2"))
@@ -84,8 +98,12 @@ public class Map {
 	}
 
 	private void createMap() {
-		String mapContent = SETTINGS.lvl.getMap();
-		String[] totalRows = mapContent.split("\n");
+		String mapContent;
+		if(SETTINGS.obtainedMap.equals("none"))
+			mapContent = SETTINGS.lvl.getMap();
+		else	
+			mapContent = SETTINGS.obtainedMap; 
+		String[] totalRows = mapContent.split("=");
 		int numCols = totalRows.length;
 		int numRows = totalRows[0].length();
 		mapWidth = numRows*32;
@@ -201,14 +219,81 @@ public class Map {
 	}
 
 	public void moveObjects() {
+		String msgToSendToPlayers = "moveRobots:";
+		ArrayList<Moveable> robots = new ArrayList<Moveable>();
+		ArrayList<DIRECTION> dirs = new ArrayList<DIRECTION>();
 		for(int col=0; col < mapMatrix[0].length; col++){
 			for(int row=0; row < mapMatrix.length; row++){
-				if(mapMatrix[row][col] instanceof Moveable)
-					((Moveable)mapMatrix[row][col]).moveRandom(); 
+				if(mapMatrix[row][col] instanceof Moveable){
+					Robot robot = (Robot)mapMatrix[row][col]; 
+					DIRECTION dir = DIRECTION.randomDir();
+					ArrayList<DIRECTION> dirsUsed = new ArrayList<DIRECTION>();
+					while(dirsUsed.size() != 4){
+						int posNextMatrixX = robot.getX()/32 + dir.x;
+						int posNextMatrixY = robot.getY()/32 + dir.y;
+						if(posIsFree(posNextMatrixX,posNextMatrixY)){
+							if(SETTINGS.mode == MODE.SGP){
+								((Moveable)robot).moveRandom(dir); 
+							}else if(SETTINGS.mode == MODE.WDS){
+								msgToSendToPlayers += row + "," + col + "," + dir.x
+								+ "," + dir.y +"," + robot.getX() +"," + robot.getY() + ";";
+								robots.add((Moveable)robot);
+								dirs.add(dir);
+							}
+							break;
+						}else{
+							dir = DIRECTION.randomDir();
+							if(!dirsUsed.contains(dir))
+								dirsUsed.add(dir);
+						}
+					}
+				}
 			}
+		}
+		if(SETTINGS.mode == MODE.WDS){
+			waitForPlayersAcknowledge(msgToSendToPlayers,robots,dirs);
 		}
 	}
 
+	private void waitForPlayersAcknowledge(String msgToSendToPlayers,
+			ArrayList<Moveable> robots, ArrayList<DIRECTION> dirs) {
+		new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,msgToSendToPlayers, "moveRobots!");
+//		int activePlayers = getPlayersAlive();
+		
+		Log.i("MR", "Waiting ...");
+//		while (appCtx.numAcks < activePlayers-1) {
+//		}
+		appCtx.numAcks = 0;
+		for (int i = 0; i < robots.size(); i++) {
+			Robot r = (Robot) robots.get(i);
+			DIRECTION dir = dirs.get(i);
+			r.quickMove(dir);
+			Log.i("MR", "Updated ROBOT");
+		}
+	}
+
+	public int getPlayersAlive() {
+		int activePlayers = 0;
+
+		try {
+			if (player1.isAlive)
+				activePlayers++;
+		} catch (NullPointerException e) {}
+		try {
+			if (player2.isAlive)
+				activePlayers++;
+		} catch (NullPointerException e) {}
+		try {
+			if (player3.isAlive)
+				activePlayers++;
+		} catch (NullPointerException e) {}
+		try {
+			if (player4.isAlive)
+				activePlayers++;
+		} catch (NullPointerException e) {}
+
+		return activePlayers;
+	}
 
 	public void placeBomb() {
 		int playerMatrixX = myPlayer.getMatrixX();
@@ -216,10 +301,15 @@ public class Map {
 		int playerX = myPlayer.getX();
 		int playerY = myPlayer.getY();
 		if(mapMatrix[playerMatrixX][playerMatrixY] instanceof Walkable && myPlayer.canMove()){
-			if(SETTINGS.singlePlayer)
+			if(SETTINGS.mode == MODE.SGP)
 				mapMatrix[playerMatrixX][playerMatrixY] = new Bomb(gameView,playerX,playerY,myPlayer);
-			else
-				new ClientConnectorTask().execute("placeBomb:"+playerMatrixX +","+ playerMatrixY+","+myPlayer.id, "PlaceBomb!");
+			else if(SETTINGS.mode == MODE.MLP)
+				new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"placeBomb:"+playerMatrixX +","+ playerMatrixY+","+myPlayer.id, "PlaceBomb!");
+			else if(SETTINGS.mode == MODE.WDS){
+				new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"placeBomb:"+playerMatrixX +","+ playerMatrixY+","+myPlayer.id, "PlaceBomb!");
+				mapMatrix[playerMatrixX][playerMatrixY] = new Bomb(gameView,playerX,playerY,myPlayer);
+			}
+			
 		}
 	}
 	
@@ -240,10 +330,10 @@ public class Map {
 	public void killPlayer(){
 		if(myPlayer.isAlive){
 			myPlayer.kill();
-			new ClientConnectorTask().execute("playerDied:" + myPlayer.id + "," + myPlayer.getScore() ,"died");
+			new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerDied:" + myPlayer.id + "," + myPlayer.getScore() ,"died");
 		}else{
 			myPlayer.spawn();
-			new ClientConnectorTask().execute("playerResume:" + myPlayer.id ,"died");
+			new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerResume:" + myPlayer.id ,"died");
 		}
 	}
 	
@@ -252,25 +342,32 @@ public class Map {
 	}
 
 	public void updateRobotsInMatrix(String[] args) {
+		for(int col=0; col < mapMatrix[0].length; col++){
+			for(int row=0; row < mapMatrix.length; row++){
+				if(mapMatrix[row][col] instanceof Robot){
+					mapMatrix[row][col] = new EmptySpace(gameView,32*row,32*col);
+				}
+			}
+		}
 		for(String s:args){
 			String[] robotArgs = s.split(",");
-			int posX = Integer.parseInt(robotArgs[0]);
-			int posY = Integer.parseInt(robotArgs[1]);
+			int posMatX = Integer.parseInt(robotArgs[0]);
+			int posMatY = Integer.parseInt(robotArgs[1]);
 			int dirX = Integer.parseInt(robotArgs[2]);
 			int dirY = Integer.parseInt(robotArgs[3]);
-			DIRECTION direction = null;
-			for(DIRECTION dir:DIRECTION.values()){
-				if(dirX == dir.x && dirY==dir.y)
-					direction = dir;
-			}
-			if(mapMatrix[posX][posY] instanceof Robot){
-				((Robot)mapMatrix[posX][posY]).move(direction);
-				gameView.getMap().updateMatrix(mapMatrix[posX][posY], posX, posY,
-						posX+dirX, posY+dirY);
-
-			}else{
-				Log.w("D: RobotUpdate"," No robot found!!!!!!!!");
-			}
+			int row = posMatX + dirX;
+			int col = posMatY + dirY;
+//			DIRECTION direction = null;
+//			for(DIRECTION dir:DIRECTION.values()){
+//				if(dirX == dir.x && dirY==dir.y)
+//					direction = dir;
+//			}
+//			if(mapMatrix[posMatX][posMatY] instanceof Robot){
+//				((Robot)mapMatrix[posMatX][posMatY]).quickMove(direction);
+//			}else{
+//				Log.w("D: RobotUpdate"," No robot found!!!!!!!!");
+//			}
+			mapMatrix[row][col] = new Robot(gameView,32*row,32*col);
 		}
 	}
 
@@ -302,15 +399,29 @@ public class Map {
 		}
 	}
 
-	public void killPlayer(String playerID) {
+	public void killPlayer(String inputReceived) {
+		String[] args = inputReceived.split(",");
+		String playerID = args[0];
 		if(playerID.contains("p1")){
 			player1.kill();
+			player1.resetPosToStart();
+			player1.score = 0;
+			SETTINGS.numPlayers--;
 		}else if(playerID.contains("p2")){
 			player2.kill();
+			player2.resetPosToStart();
+			player2.score = 0;
+			SETTINGS.numPlayers--;
 		}else if(playerID.contains("p3")){
 			player3.kill();
+			player3.resetPosToStart();
+			player3.score = 0;
+			SETTINGS.numPlayers--;
 		}else if(playerID.contains("p4")){
 			player4.kill();
+			player4.resetPosToStart();
+			player4.score = 0;
+			SETTINGS.numPlayers--;
 		}
 	}
 
@@ -335,7 +446,21 @@ public class Map {
 	}
 
 	public void giveLoot(String[] lootArgs) {
-		myPlayer.updateScore(Integer.parseInt(lootArgs[1]));
+		if(SETTINGS.mode == MODE.MLP)
+			myPlayer.updateScore(Integer.parseInt(lootArgs[1]));
+		else if(SETTINGS.mode == MODE.WDS){
+			String id = lootArgs[0];
+			if(id.equals("p1")){
+				player1.updateScore(Integer.parseInt(lootArgs[1]));
+			}else if(id.equals("p2")){
+				player2.updateScore(Integer.parseInt(lootArgs[1]));
+			}else if(id.equals("p3")){
+				player3.updateScore(Integer.parseInt(lootArgs[1]));
+			}else if(id.equals("p4")){
+				player4.updateScore(Integer.parseInt(lootArgs[1]));
+			}
+		}
+			
 	}
 
 	public void resumePlayer(String[] args) {
@@ -351,4 +476,121 @@ public class Map {
 		}
 	}
 
+	public String getAvailablePlayer() {
+		try {
+			if (!player1.isAlive)
+				return "p1";
+		} catch (NullPointerException e) {}
+		try {
+			if (!player2.isAlive)
+				return "p2";
+		} catch (NullPointerException e) {}
+		try {
+			if (!player3.isAlive)
+				return "p3";
+		} catch (NullPointerException e) {}
+		try {
+			if (!player4.isAlive)
+				return "p4";
+		} catch (NullPointerException e) {}
+		return null;
+	}
+
+	public Player getWinner() {
+		Player winner;
+		if (SETTINGS.numPlayers == 1)
+			winner = player1;
+		else {
+			if (player1.getScore() > player2.getScore()) {
+				winner = player1;
+			} else {
+				winner = player2;
+			}
+			if (winner.getScore() < player3.getScore()) {
+				winner = player3;
+			}
+			if (winner.getScore() < player4.getScore()) {
+				winner = player4;
+			}
+		}
+		Log.i("new winner score",""+ winner.getScore());
+		return winner;
+	}
+
+	public String getCurrentMatrix() {
+		String currentMatrix="";
+		int x1 = player1.startX/32;
+		int y1 = player1.startY/32;
+		int x2 = player2.startX/32;
+		int y2 = player2.startY/32;
+		int x3 = player3.startX/32;
+		int y3 = player3.startY/32;
+		int x4 = player4.startX/32;
+		int y4 = player4.startY/32;
+		for(int col=0; col < mapMatrix[0].length; col++){
+			for(int row=0; row < mapMatrix.length; row++){
+				String spr = mapMatrix[row][col].toString();
+				if(row==x1 && col==y1)
+					currentMatrix += "1";
+				else if(row==x2 && col==y2)
+					currentMatrix += "2";
+				else if(row==x3 && col==y3)
+					currentMatrix += "3";
+				else if(row==x4 && col==y4 && row!=0 && col!=0)
+					currentMatrix += "4";
+				else if(spr.equals("B") || spr.equals("E") || spr.equals("R"))
+					currentMatrix += "-";
+				else
+					currentMatrix += mapMatrix[row][col].toString(); 
+			}
+			currentMatrix += "=";
+		}
+		return currentMatrix;
+	}
+	
+	public int getNumPlayersAlive() {
+		int pAlive = 0;
+		try {
+			if (player1.isAlive)
+				pAlive++;
+		} catch (NullPointerException e) {}
+		try {
+			if (player2.isAlive)
+				pAlive++;
+		} catch (NullPointerException e) {}
+		try {
+			if (player3.isAlive)
+				pAlive++;
+		} catch (NullPointerException e) {}
+		try {
+			if (player4.isAlive)
+				pAlive++;
+		} catch (NullPointerException e) {}
+		return pAlive;
+	}
+
+	public ArrayList<String> getIdsOfPlayersAlive() {
+		ArrayList<String> playersAlive = new ArrayList<String>();
+		try {
+			if (player1.isAlive)
+				playersAlive.add(player1.id);
+		} catch (NullPointerException e) {}
+		try {
+			if (player2.isAlive)
+				playersAlive.add(player2.id);
+		} catch (NullPointerException e) {}
+		try {
+			if (player3.isAlive)
+				playersAlive.add(player3.id);
+		} catch (NullPointerException e) {}
+		try {
+			if (player4.isAlive)
+				playersAlive.add(player4.id);
+		} catch (NullPointerException e) {}
+		
+		if(playersAlive.contains(myPlayer.id)){
+			playersAlive.remove(myPlayer.id);
+		}
+		return playersAlive;
+	}
 }

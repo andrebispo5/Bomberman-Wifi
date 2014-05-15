@@ -1,26 +1,52 @@
 package ist.utl.pt.bbcm;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 
-
-
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pBroadcast;
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pDevice;
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pDeviceList;
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pInfo;
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pManager;
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pManager.Channel;
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pManager.GroupInfoListener;
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pManager.PeerListListener;
+import pt.utl.ist.cmov.wifidirect.service.SimWifiP2pService;
+import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
+import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocketManager;
+import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocketServer;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.MODE;
 import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
+import ist.utl.pt.bbcm.networking.KnownPorts;
+import ist.utl.pt.bbcm.sprites.Player;
+import ist.utl.pt.bbcm.wdsim.SimWifiP2pBroadcastReceiver;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.os.Vibrator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity  {
 	
 	public TextView tvScore;
 	public TextView gameTime;
@@ -28,11 +54,14 @@ public class MainActivity extends Activity {
 	public int ElapsedTime;
 	private GameView newGame;
 	private CountDownTimer timer;
+	private ApplicationContext appCtx;	
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_screen);
+		appCtx = (ApplicationContext) getApplicationContext();
 		tvScore = (TextView) findViewById(R.id.scoreTxt);
 		tvNumPlayers = (TextView) findViewById(R.id.playersTxt);
 		tvNumPlayers.setText("Players:\n"+SETTINGS.numPlayers);
@@ -42,23 +71,31 @@ public class MainActivity extends Activity {
 		newGame = new GameView(this);
 		gameLayout.addView(newGame);
 		initButtons();
-		initTimer();
-	}
-
-	private void initTimer() {
 		ElapsedTime=0;
+		initTimer();
+		
+	}
+	
+	private void initTimer() {
 		gameTime = (TextView)findViewById(R.id.gameTime);
-		timer = new CountDownTimer(SETTINGS.gameDuration, 1000) {
+		timer = new CountDownTimer(SETTINGS.gameDuration-ElapsedTime, 1000) {
 		     public void onTick(long millisUntilFinished) {
 		    	 setTime(SETTINGS.gameDuration - ElapsedTime);
+		    	 SETTINGS.numPlayers = newGame.getMap().getNumPlayersAlive();
+		    	 tvNumPlayers.setText("Players:\n"+SETTINGS.numPlayers);
 		    	 ElapsedTime+=1000;
 		     }
 		     public void onFinish() {
 		    	 setTime(0);
-	    		 if(SETTINGS.singlePlayer)
+	    		 if(SETTINGS.mode == MODE.SGP)
 	    			 endGame();
-	    		 else
-	    			 new ClientConnectorTask().execute("timeOut:" + newGame.getMap().myPlayer.id+","+ newGame.getMap().myPlayer.getScore() ,"died");	 
+	    		 else if(SETTINGS.mode == MODE.MLP){
+	    			 new ClientConnectorTask((ApplicationContext)getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"timeOut:" + newGame.getMap().myPlayer.id+","+ newGame.getMap().myPlayer.getScore() ,"died");
+	    		 }else if(SETTINGS.mode == MODE.WDS && appCtx.isGO){
+	    			 Player winner = newGame.getMap().getWinner();
+	    			 endGame(new String[]{winner.id,String.valueOf(winner.getScore())});
+	    			 new ClientConnectorTask((ApplicationContext)getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"timeOut:" + winner.id+","+ winner.getScore() ,"died");
+	    		 }
 		     }		
 		  }.start();
 	}
@@ -183,7 +220,9 @@ public class MainActivity extends Activity {
 
 				    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				        public void onClick(DialogInterface dialog, int whichButton) {
-				           finish();
+					        if(SETTINGS.mode == MODE.WDS)
+					        		unbindService(appCtx.mConnection);
+					        finish();
 				        }
 				    });
 				    alert.show();
@@ -199,30 +238,23 @@ public class MainActivity extends Activity {
 	}
     
 	@Override
-	public void onPause() {
-		super.onPause();
-		Log.e("BACKGROUND", "fiz pause!");
-	}
-	@Override
-	public void onStart() {
-		super.onResume();
-		Log.e("BACKGROUND", "Fiz start!!");
+	public void onStop() {
+		super.onStop();
+		if(SETTINGS.mode == MODE.SGP)
+			timer.cancel();
 	}
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.e("BACKGROUND", "Fiz resume!!");
+		if(SETTINGS.mode == MODE.SGP)
+			initTimer();
 	}
 	@Override
-	public void onRestart() {
-		super.onResume();
-		Log.e("BACKGROUND", "Fiz restart!!");
+	public void onPause() {
+		super.onPause();
+		if(SETTINGS.mode == MODE.SGP)
+			timer.cancel();
 	}
-	@Override
-	public void onStop() {
-		super.onStop();
-		timer.cancel();
-
-		Log.e("BACKGROUND", "Fiz stop!!");
-	}
+	
+	
 }

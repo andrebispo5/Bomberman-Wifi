@@ -1,18 +1,21 @@
 package ist.utl.pt.bbcm.sprites;
 
+import ist.utl.pt.bbcm.ApplicationContext;
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.MODE;
 import ist.utl.pt.bbcm.enums.SETTINGS;
+import ist.utl.pt.bbcm.interfaces.Killable;
+import ist.utl.pt.bbcm.interfaces.Moveable;
+import ist.utl.pt.bbcm.interfaces.Sprite;
 import ist.utl.pt.bbcm.map.Map;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
-import ist.utl.pt.bbcm.sprites.interfaces.Killable;
-import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
-import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 
 public class Robot implements Sprite , Killable, Moveable{
 	// direction = 0 up, 1 left, 2 down, 3 right,
@@ -64,8 +67,8 @@ public class Robot implements Sprite , Killable, Moveable{
 			
 			if(posMatrixX == playerX && posMatrixY == playerY && map.myPlayer.isAlive){
 				map.myPlayer.kill();
-				if(!SETTINGS.singlePlayer)
-					new ClientConnectorTask().execute("playerDied:" + map.myPlayer.id + "," + map.myPlayer.getScore() ,"died");
+				if(SETTINGS.mode == MODE.MLP || SETTINGS.mode == MODE.WDS)
+					new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerDied:" + map.myPlayer.id + "," + map.myPlayer.getScore() ,"died");
 			}
 		}
 	}
@@ -81,8 +84,7 @@ public class Robot implements Sprite , Killable, Moveable{
 	}
 	
 	@Override
-	public void moveRandom() {
-		DIRECTION direction = DIRECTION.randomDir();
+	public void moveRandom(DIRECTION direction) {
 		int posMatrixX = this.getMatrixX();
 		int posMatrixY = this.getMatrixY();
 		int posNextMatrixX = this.getMatrixX() + direction.x;
@@ -184,6 +186,16 @@ public class Robot implements Sprite , Killable, Moveable{
 			updateSprite();
 		}
 	}
-	
+
+	public void quickMove(DIRECTION direction) {
+		int posMatrixX = this.getMatrixX();
+		int posMatrixY = this.getMatrixY();
+		int posNextMatrixX = this.getMatrixX() + direction.x;
+		int posNextMatrixY = this.getMatrixY() + direction.y;
+		x = x + 32 * direction.x;
+		y = y + 32 * direction.y;
+		numSteps = 0;
+		gameView.getMap().updateMatrix(this,posMatrixX,posMatrixY, posNextMatrixX, posNextMatrixY);
+	}
 	
 }

@@ -1,8 +1,8 @@
 package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
-import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
-import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
+import ist.utl.pt.bbcm.interfaces.Sprite;
+import ist.utl.pt.bbcm.interfaces.Walkable;
 import android.graphics.Canvas;
 
 public class EmptySpace implements Sprite, Walkable {

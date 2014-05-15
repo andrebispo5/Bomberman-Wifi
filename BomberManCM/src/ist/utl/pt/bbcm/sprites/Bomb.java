@@ -1,18 +1,21 @@
 package ist.utl.pt.bbcm.sprites;
 
+import ist.utl.pt.bbcm.ApplicationContext;
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
+import ist.utl.pt.bbcm.interfaces.Killable;
+import ist.utl.pt.bbcm.interfaces.Sprite;
+import ist.utl.pt.bbcm.interfaces.Walkable;
 import ist.utl.pt.bbcm.map.Map;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
-import ist.utl.pt.bbcm.sprites.interfaces.Killable;
-import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
-import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.MODE;
 import ist.utl.pt.bbcm.enums.SETTINGS;
 
 public class Bomb implements Sprite {
@@ -73,25 +76,29 @@ public class Bomb implements Sprite {
 					break;
 				}else{
 					if(map.myPlayer.getMatrixX()==posNextMatrixX && map.myPlayer.getMatrixY()==posNextMatrixY && map.myPlayer.isAlive){
-						if(bombOwner != map.myPlayer){
-							new ClientConnectorTask().execute("giveLoot:" + bombOwner.id+","+ map.myPlayer.getLoot() ,"giveLoot");
-							Log.w("SCORE","KILLED PLAYER MAIS SCORE!");
+						if(bombOwner != map.myPlayer && bombOwner.isAlive){
+							bombOwner.updateScore(map.myPlayer.getLoot());
+							new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"giveLoot:" + bombOwner.id+","+ map.myPlayer.getLoot() ,"giveLoot");
+							Log.w("SCORE","Morri vou dar pontuacao a quem me matou");
 						}
-						if(!SETTINGS.singlePlayer)
-							new ClientConnectorTask().execute("playerDied:" + map.myPlayer.id+","+ map.myPlayer.getScore() ,"died");
+						if(SETTINGS.mode == MODE.MLP || SETTINGS.mode == MODE.WDS)
+							new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerDied:" + map.myPlayer.id+","+ map.myPlayer.getScore() ,"died");
 						map.myPlayer.kill();
 					}
 					if(adjObj instanceof Killable){
-						score+= ((Killable)adjObj).getLoot();
 						((Killable)adjObj).kill();
 						mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x*r, y + 32*dir.y*r);
-						if(!SETTINGS.singlePlayer && bombOwner == map.myPlayer)
-							new ClientConnectorTask().execute("explodeBomb:"+posNextMatrixX+","+posNextMatrixY,"Explosion");
+						if(SETTINGS.mode == MODE.WDS && bombOwner == map.myPlayer){
+							new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"giveLoot:" + bombOwner.id+","+ ((Killable)adjObj).getLoot() ,"giveLoot");
+							score+= ((Killable)adjObj).getLoot();
+						}
+						if(SETTINGS.mode == MODE.MLP && bombOwner == map.myPlayer)
+							new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"explodeBomb:"+posNextMatrixX+","+posNextMatrixY,"Explosion");
 						break;
 					}else if(adjObj instanceof Walkable){
 						mapMatrix[posNextMatrixX][posNextMatrixY] = new Explosion(gameView, x + 32*dir.x*r, y + 32*dir.y*r);
-						if(!SETTINGS.singlePlayer && bombOwner == map.myPlayer)
-							new ClientConnectorTask().execute("explodeBomb:"+posNextMatrixX+","+posNextMatrixY,"Explosion");
+						if(SETTINGS.mode == MODE.MLP && bombOwner == map.myPlayer)
+							new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"explodeBomb:"+posNextMatrixX+","+posNextMatrixY,"Explosion");
 					}
 				}
 				

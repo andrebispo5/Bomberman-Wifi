@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".Menu" >
+
+    <TextView
+        android:id="@+id/WDTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:text="WDS Lobby"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/Title" />
+
+    <ProgressBar
+        android:id="@+id/loader"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/WDwaiting"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp" />
+
+    <Button
+        android:id="@+id/connectBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/WDwaiting"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/WDwaiting"
+        android:layout_marginBottom="46dp"
+        android:onClick="connectToGO"
+        android:text="Connect" />
+
+    <TextView
+        android:id="@+id/WDwaiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/WDTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="62dp"
+        android:text="Waiting for server join permission!"
+        android:textSize="@dimen/Wait" />
+
+</RelativeLayout>

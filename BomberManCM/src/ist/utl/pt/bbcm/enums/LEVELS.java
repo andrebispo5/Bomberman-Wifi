@@ -1,41 +1,46 @@
 package ist.utl.pt.bbcm.enums;
 
 public enum LEVELS {
-	LVL1(	"WWWWWWWWWWWWWWWWWWW\n" +
-			"W-2-----R----O----W\n" +
-			"WWOW-W-W-W-W-W-W-WW\n" +
-			"W-O--------R------W\n" +
-			"WWOWOW-W-W-W-WOW-WW\n" +
-			"W--O--------O-R--3W\n" +
-			"WWOW-W-W-W-W-W-W-WW\n" +
-			"W-OOOO---1-------OW\n" +
-			"WWOWOWOWOW-W-W-W-WW\n" +
-			"W--OOOO--R--OOO---W\n" +
-			"WW-W-WOWOW-WOWOWOWW\n" +
-			"W------OOO--OOO-ORW\n" +
-			"WWWWWWWWWWWWWWWWWWW"),
-	LVL2(	"WWWWWWWWWWWWWWWWWWW\n" +
-			"W-2----------O----W\n" +
-			"WWOW-W-W-W-W-W-W-WW\n" +
-			"W-O---------------W\n" +
-			"WWOWOW-W-W-W-WOW-WW\n" +
-			"W--O--------O-R--3W\n" +
-			"WWOW-W-W-W-W-W-W-WW\n" +
-			"W-OOOO---1-------OW\n" +
-			"WWOWOWOWOW-W-W-W-WW\n" +
-			"W--OOOO-----OOO---W\n" +
-			"WW-W-WOWOW-WOWOWOWW\n" +
-			"W------OOO--OOO-O-W\n" +
-			"WWWWWWWWWWWWWWWWWWW");
+	LVL1(	"WWWWWWWWWWWWWWWWWWW=" +
+			"W-2-----R----O----W=" +
+			"WWOW-W-W-W-W-W-W-WW=" +
+			"W-O--------R------W=" +
+			"WWOWOW-W-W-W-WOW-WW=" +
+			"W--O--------O-R--3W=" +
+			"WWOW-W-W-W-W-W-W-WW=" +
+			"W-OOOO---1-------OW=" +
+			"WWOWOWOWOW-W-W-W-WW=" +
+			"W--OOOO--R--OOO---W=" +
+			"WW-W-WOWOW-WOWOWOWW=" +
+			"W------OOO--OOO-ORW=" +
+			"WWWWWWWWWWWWWWWWWWW",3),
+	LVL2(	"WWWWWWWWWWWWWWWWWWW=" +
+			"W-2----------O----W=" +
+			"WWOW-W-W-W-W-W-W-WW=" +
+			"W-O---------------W=" +
+			"WWOWOW-W-W-W-WOW-WW=" +
+			"W--O--------O-R--3W=" +
+			"WWOW-W-W-W-W-W-W-WW=" +
+			"W-OOOO---1-------OW=" +
+			"WWOWOWOWOW-W-W-W-WW=" +
+			"W--OOOO-----OOO---W=" +
+			"WW-W-WOWOW-WOWOWOWW=" +
+			"W------OOO--OOO-O-W=" +
+			"WWWWWWWWWWWWWWWWWWW",3);
 	
 	private String map;
+	private int maxP;
 	
-	LEVELS(String mapStr){
+	LEVELS(String mapStr, int maxP){
 		this.map = mapStr;
+		this.maxP = maxP;
 	}
 
 	public String getMap() {
 		return map;
 	}	
 
+	public int getMaxP() {
+		return maxP;
+	}	
 }

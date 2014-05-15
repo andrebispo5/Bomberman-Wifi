@@ -2,7 +2,7 @@ package ist.utl.pt.bbcm.sprites;
 
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
-import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
+import ist.utl.pt.bbcm.interfaces.Sprite;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;

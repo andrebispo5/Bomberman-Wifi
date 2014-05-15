@@ -1,17 +1,20 @@
 package ist.utl.pt.bbcm.sprites;
 
+import ist.utl.pt.bbcm.ApplicationContext;
 import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.enums.DIRECTION;
+import ist.utl.pt.bbcm.enums.MODE;
 import ist.utl.pt.bbcm.enums.SETTINGS;
+import ist.utl.pt.bbcm.interfaces.Killable;
+import ist.utl.pt.bbcm.interfaces.Moveable;
+import ist.utl.pt.bbcm.interfaces.Sprite;
+import ist.utl.pt.bbcm.interfaces.Walkable;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
-import ist.utl.pt.bbcm.sprites.interfaces.Killable;
-import ist.utl.pt.bbcm.sprites.interfaces.Moveable;
-import ist.utl.pt.bbcm.sprites.interfaces.Sprite;
-import ist.utl.pt.bbcm.sprites.interfaces.Walkable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.util.Log;
 
 public class Player implements Sprite, Killable, Moveable, Walkable {
@@ -27,6 +30,8 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	private int currentFrame = 0;
 	private int x = 0;
 	private int y = 0;
+	public int startX;
+	public int startY;
 	public int width;
 	public int height;
 	private int numSteps;
@@ -35,7 +40,7 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	private boolean needsDrawing;
 	public boolean isAlive;
 	private GameView gameView;
-	private int score;
+	public int score;
 	private DIRECTION nextMove;
 
 	public Player(GameView gameView, int image, int x, int y, String id) {
@@ -52,6 +57,8 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 		this.score = 0;
 		this.nextMove = null;
 		this.id = id;
+		this.startX = x;
+		this.startY = y;
 	}
 
 	@Override
@@ -83,7 +90,7 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 			setY(getY() + ySpeed);
 			numSteps -= Math.abs(ySpeed);
 			currentFrame = ++currentFrame % BMP_COLUMNS;
-		} else if (nextMove != null && SETTINGS.singlePlayer) {
+		} else if (nextMove != null && SETTINGS.mode == MODE.SGP) {
 			Log.w("QUEUE", "Using next dir:" + nextMove.name());
 			this.move(nextMove);
 			nextMove = null;
@@ -95,19 +102,24 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 		int posNextMatrixX = this.getMatrixX() + direction.x;
 		int posNextMatrixY = this.getMatrixY() + direction.y;
 		if (gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY)) {
-			if (this.canMove()) {
-					int tmpx = direction.x * CELL_SPACING / 8;
-					int tmpy = direction.y * CELL_SPACING / 8;
-					numSteps = CELL_SPACING;
-					xSpeed = tmpx;
-					ySpeed = tmpy;
-					new ClientConnectorTask().execute("movePlayer:"
-							+ SETTINGS.myPlayer + "," + direction.x + ","
-							+ direction.y + "," + getX() +","+getY() , "updatePlayerOnServer");
-			} else {
-				Log.w("QUEUE", "ADDED dir:" + direction.name());
-				nextMove = direction;
-			}
+				if (this.canMove()) {
+						int tmpx = direction.x * CELL_SPACING / 8;
+						int tmpy = direction.y * CELL_SPACING / 8;
+						if(SETTINGS.mode == MODE.WDS){
+							this.quickMove(direction);
+						}else{
+							numSteps = CELL_SPACING;
+							xSpeed = tmpx;
+							ySpeed = tmpy;
+						}
+						new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"movePlayer:"
+								+ SETTINGS.myPlayer + "," + direction.x + ","
+								+ direction.y + "," + getX() +","+getY() , "updatePlayerOnServer");
+				} else {
+					Log.w("QUEUE", "ADDED dir:" + direction.name());
+					nextMove = direction;
+				}
+			
 		}
 	}
 
@@ -176,13 +188,12 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	}
 
 	public void updateScore(int score) {
+		Log.i("scoreUpdate", this.id +"- "+ score + " score:"+this.score);
 		this.score += score;	
 	}
 
 	@Override
-	public void moveRandom() {
-		// TODO Auto-generated method stub
-
+	public void moveRandom(DIRECTION direction) {
 	}
 
 	public void updateMultiplayerPos(DIRECTION direction, String argX, String argY) {
@@ -190,15 +201,21 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 		int y = Integer.parseInt(argY);
 		int tmpx = direction.x * CELL_SPACING / 8;
 		int tmpy = direction.y * CELL_SPACING / 8;
-		if (!this.canMove()) {
-			this.fixPosition();
+		if(SETTINGS.mode == MODE.WDS)
+		{
+			this.x=x;
+			this.y=y;
 		}else{
-			this.x = x;
-			this.y = y;
+			if (!this.canMove()) {
+				this.fixPosition();
+			}else{
+				this.x = x;
+				this.y = y;
+			}
+			numSteps = CELL_SPACING;
+			xSpeed = tmpx;
+			ySpeed = tmpy;
 		}
-		numSteps = CELL_SPACING;
-		xSpeed = tmpx;
-		ySpeed = tmpy;
 
 	}
 
@@ -207,5 +224,15 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 			updateSprite();
 		}
 	}
+	
+	public void quickMove(DIRECTION direction) {
+		x = x + 32 * direction.x;
+		y = y + 32 * direction.y;
+		numSteps = 0;
+	}
 
+	public void resetPosToStart() {
+		this.x = this.startX;
+		this.y = this.startY;
+	}
 }

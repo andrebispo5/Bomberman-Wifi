@@ -39,11 +39,10 @@ public class Lobby extends Activity {
 		createServerSocket();
 		sendLoginRequest();
 		waitingForPlayers();
-
 	}
 
 	private void sendLoginRequest() {
-		new ClientConnectorTask().execute("login:" + SETTINGS.playerName
+		new ClientConnectorTask((ApplicationContext)getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"login:" + SETTINGS.playerName
 				+ ",20,20," + getLocalIpAddress() + "," + PORT);
 	}
 
@@ -166,7 +165,7 @@ public class Lobby extends Activity {
 	}
 
 	public void playerReady(View view) {
-		new ClientConnectorTask().execute("ready:");
+		new ClientConnectorTask((ApplicationContext)getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"ready:");
 	}
 
 	@Override
