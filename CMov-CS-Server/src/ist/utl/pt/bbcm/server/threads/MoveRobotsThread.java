@@ -1,5 +1,6 @@
 package ist.utl.pt.bbcm.server.threads;
 
+import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.server.Server;
 import ist.utl.pt.bbcm.server.Matrix;
 
@@ -7,7 +8,7 @@ import ist.utl.pt.bbcm.server.Matrix;
 public class MoveRobotsThread extends Thread{
 	
 	
-	static final long messagePS = 1;
+	static final long messagePS = SETTINGS.robotSpeed;
     private boolean running = false;
     
     public MoveRobotsThread() {}

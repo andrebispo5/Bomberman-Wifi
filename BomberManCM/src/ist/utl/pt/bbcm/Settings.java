@@ -98,8 +98,10 @@ public class Settings extends Activity {
 		
 		if(levelSpinner.equals("One")){
 			SETTINGS.lvl = LEVELS.LVL1;
-		}else {
+		}else if(levelSpinner.equals("Two")){
 			SETTINGS.lvl = LEVELS.LVL2;
+		}else if(levelSpinner.equals("Three")){
+			SETTINGS.lvl = LEVELS.LVL3;
 		}
 		created=true;
 		finish();

@@ -14,6 +14,7 @@
     <string-array name="level_arrays">
         <item>One</item>
         <item>Two</item>
+        <item>Three</item>
     </string-array>
 	
     <string name="game_duration_prompt">Game duration:</string>
@@ -54,7 +55,7 @@
     </string-array>
     
     <string name="robot_speed_prompt">Robot speed:</string>
-    <string-array name="robot_speed_arrays">
+    <string-array name="robot_speed_arrays">        
         <item>1</item>
         <item>2</item>
         <item>3</item>

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class SETTINGS implements Serializable{
 	private static final long serialVersionUID = 1L;
-	public static LEVELS lvl = LEVELS.LVL1;
+	public static LEVELS lvl = LEVELS.LVL3;
 	public static int gameDuration = 30*1000;
 	public static int bombTimer = 2000;
 	public static int explosionRange = 1;
