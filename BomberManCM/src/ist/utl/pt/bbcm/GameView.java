@@ -149,7 +149,7 @@ public class GameView extends SurfaceView {
 
 
 	public void pauseGame() {
-		map.killPlayer();
+		map.pausePlayer(map.myPlayer.id);
 	}
 
 

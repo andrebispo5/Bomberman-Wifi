@@ -93,6 +93,8 @@ public class GameLoopThread extends Thread {
 								moveRobotsAsync(args);
 							} else if (command.equals("movePlayer")) {
 								movePlayerAsync(args);
+							} else if (command.equals("playerPaused")) {
+								pausePlayerAsync(args[0].split(","));
 							} else if (command.equals("placeBomb")) {
 								placeBombAsync(args);
 							} else if (command.equals("playerDied")) {
@@ -231,7 +233,11 @@ public class GameLoopThread extends Thread {
 			}
 		}.execute();
 	}
-
+	
+	private void pausePlayerAsync(String[] args) {
+		view.getMap().pausePlayer(args[0]);
+	}
+	
 	private void singlePlayerLoop() {
 		drawCanvas();
 		view.moveObjects();

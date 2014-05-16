@@ -57,6 +57,9 @@ public class UpdateMatrixThread extends Thread {
 				}else if(msg[0].equals("playerResume")){ 
 					System.out.println("Received player resume event!");
 					playerResumed(message, msg);
+				}else if(msg[0].equals("playerPaused")){ 
+					System.out.println("Received player pause event!");
+					playerPaused(message, msg);
 				}else if(msg[0].equals("quitGame")){ 
 					System.out.println("Received player quit game event!");
 					playerQuitGame(msg[1]);
@@ -86,6 +89,10 @@ public class UpdateMatrixThread extends Thread {
 		else if(resumeArgs[0].equals("p4")){
 			Server.p4.isAlive = true;
 		}
+	}
+	private void playerPaused(String message, String[] msg) {
+		String[] resumeArgs = msg[1].split(",");
+		Message.sendToAllOtherPlayers(message,resumeArgs);
 	}
 
 	private void playerQuitGame(String name) {

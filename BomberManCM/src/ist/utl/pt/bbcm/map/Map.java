@@ -351,4 +351,34 @@ public class Map {
 		}
 	}
 
+	public void pausePlayer(String id){
+		Player p = getPlayerWithId(id);
+		Log.i("PAUSE", id);
+		Log.i("PAUSE", p.id);
+		if(p.isAlive){
+			if(p.isPaused){
+				p.spawn();
+				if(p.equals(myPlayer))
+					new ClientConnectorTask().execute("playerResume:" + p.id,"resume");
+			}else{
+				p.pause();
+				if(p.equals(myPlayer))
+					new ClientConnectorTask().execute("playerPaused:" + myPlayer.id +"," + myPlayer.getScore() ,"paused");
+			}
+		}
+	}
+	
+	private Player getPlayerWithId(String id) {
+		if(id.equals("p1")){
+			return player1;
+		}else if(id.equals("p2")){
+			return player2;
+		}else if(id.equals("p3")){
+			return player3;
+		}else if(id.equals("p4")){
+			return player4;
+		}
+		return null;
+	}
+
 }

@@ -42,13 +42,13 @@ public class MainActivity extends Activity {
 		newGame = new GameView(this);
 		gameLayout.addView(newGame);
 		initButtons();
+		ElapsedTime=0;
 		initTimer();
 	}
 
 	private void initTimer() {
-		ElapsedTime=0;
 		gameTime = (TextView)findViewById(R.id.gameTime);
-		timer = new CountDownTimer(SETTINGS.gameDuration, 1000) {
+		timer = new CountDownTimer(SETTINGS.gameDuration-ElapsedTime, 1000) {
 		     public void onTick(long millisUntilFinished) {
 		    	 setTime(SETTINGS.gameDuration - ElapsedTime);
 		    	 ElapsedTime+=1000;
@@ -183,7 +183,9 @@ public class MainActivity extends Activity {
 
 				    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				        public void onClick(DialogInterface dialog, int whichButton) {
-				           finish();
+				        	SETTINGS.myPlayer = "p1";
+							SETTINGS.numPlayers = 1;
+				        	finish();
 				        }
 				    });
 				    alert.show();
@@ -205,23 +207,26 @@ public class MainActivity extends Activity {
 	}
 	@Override
 	public void onStart() {
-		super.onResume();
+		super.onStart();
 		Log.e("BACKGROUND", "Fiz start!!");
 	}
 	@Override
 	public void onResume() {
 		super.onResume();
+		if(SETTINGS.singlePlayer)
+			initTimer();
 		Log.e("BACKGROUND", "Fiz resume!!");
 	}
 	@Override
 	public void onRestart() {
-		super.onResume();
+		super.onRestart();
 		Log.e("BACKGROUND", "Fiz restart!!");
 	}
 	@Override
 	public void onStop() {
 		super.onStop();
-		timer.cancel();
+		if(SETTINGS.singlePlayer)
+			timer.cancel();
 
 		Log.e("BACKGROUND", "Fiz stop!!");
 	}
