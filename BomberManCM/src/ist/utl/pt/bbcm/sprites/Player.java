@@ -42,6 +42,7 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	private GameView gameView;
 	public int score;
 	private DIRECTION nextMove;
+	public boolean isPaused;
 
 	public Player(GameView gameView, int image, int x, int y, String id) {
 		this.gameView = gameView;
@@ -59,11 +60,12 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 		this.id = id;
 		this.startX = x;
 		this.startY = y;
+		this.isPaused = false;
 	}
 
 	@Override
 	public void drawToCanvas(Canvas canvas) {
-		if (needsDrawing && isAlive) {
+		if (needsDrawing && isAlive && !isPaused) {
 			updateSprite();
 			int srcX = currentFrame * width;
 			int srcY = getAnimationRow() * height;
@@ -101,7 +103,7 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	public void move(DIRECTION direction) {
 		int posNextMatrixX = this.getMatrixX() + direction.x;
 		int posNextMatrixY = this.getMatrixY() + direction.y;
-		if (gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY)) {
+		if (gameView.getMap().posIsFree(posNextMatrixX, posNextMatrixY) && this.isAlive && !this.isPaused) {
 				if (this.canMove()) {
 						int tmpx = direction.x * CELL_SPACING / 8;
 						int tmpy = direction.y * CELL_SPACING / 8;
@@ -146,6 +148,7 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	}
 
 	public void spawn() {
+		this.isPaused = false;
 		this.isAlive = true;
 		this.startDrawing();
 	}
@@ -234,5 +237,9 @@ public class Player implements Sprite, Killable, Moveable, Walkable {
 	public void resetPosToStart() {
 		this.x = this.startX;
 		this.y = this.startY;
+	}
+
+	public void pause() {
+		this.isPaused = true;
 	}
 }

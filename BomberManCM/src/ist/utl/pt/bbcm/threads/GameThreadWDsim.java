@@ -12,6 +12,7 @@ import ist.utl.pt.bbcm.GameView;
 import ist.utl.pt.bbcm.R;
 import ist.utl.pt.bbcm.enums.SETTINGS;
 import ist.utl.pt.bbcm.networking.ClientConnectorTask;
+import ist.utl.pt.bbcm.networking.SettingsExtractor;
 import ist.utl.pt.bbcm.sprites.Player;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -183,6 +184,8 @@ public class GameThreadWDsim extends Thread implements GameLoopThread {
 			placeBombAsync(args);
 		} else if (command.equals("playerDied")) {
 			killPlayerAsync(args);
+		} else if (command.equals("playerPaused")) {
+			pausePlayerAsync(args);
 		} else if (command.equals("endGame")) {
 			endGameAsync(args);
 			setRunning(false);
@@ -211,6 +214,10 @@ public class GameThreadWDsim extends Thread implements GameLoopThread {
 	
 	
 	
+	private void pausePlayerAsync(String[] args) {
+		view.getMap().pausePlayer(args[0]);
+	}
+
 	private void quitGameAsync(final String[] args) {
 				view.quitGame(args[0]);
 	}
@@ -264,11 +271,14 @@ public class GameThreadWDsim extends Thread implements GameLoopThread {
 			SETTINGS.numPlayers = appCtx.peersIP.size()+1;
 			String currentMatrix = view.getMap().getCurrentMatrix();
 			String peersIP = appCtx.getPeersIps();
+			String restOfSettings = new SettingsExtractor().getWDSimMessage();
 			int timeLeft = SETTINGS.gameDuration - view.mainActivityContext.ElapsedTime;
 			Log.e("Login","time Left:" + timeLeft);
 			Log.e("Login","Settings time:" + SETTINGS.gameDuration);
 			new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-					"sendToPeer",msg[1],"loginAck:"+id+","+currentMatrix+","+peersIP+","+SETTINGS.numPlayers+","+timeLeft);
+					"sendToPeer",msg[1],"loginAck:"+id+","+currentMatrix+","
+										+peersIP+","+SETTINGS.numPlayers+","
+										+timeLeft+","+restOfSettings);
 		}else{
 			Log.e("Login","false");
 			new ClientConnectorTask(appCtx).executeOnExecutor(

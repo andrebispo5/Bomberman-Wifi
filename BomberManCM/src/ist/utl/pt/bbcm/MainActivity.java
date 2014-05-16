@@ -215,8 +215,8 @@ public class MainActivity extends Activity  {
 			  public void run() {
 				  AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
 				    alert.setTitle("Game Over");
+				    alert.setCancelable(false);
 				    alert.setMessage(args[0]+" wins with " + args[1] + " points.");
-
 				    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				        public void onClick(DialogInterface dialog, int whichButton) {
 					        if(SETTINGS.mode == MODE.WDS)

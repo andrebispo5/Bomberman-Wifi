@@ -72,6 +72,12 @@ public class LobbyWDsim extends Activity {
 								SETTINGS.myPlayer = id;
 								SETTINGS.numPlayers = Integer.parseInt(args[3]);
 								SETTINGS.gameDuration = Integer.parseInt(args[4])-2000;
+								SETTINGS.bombTimer = Integer.parseInt(args[5]);
+								SETTINGS.explosionRange = Integer.parseInt(args[6]);
+								SETTINGS.explosionDuration = Integer.parseInt(args[7]);
+								SETTINGS.robotSpeed = Integer.parseInt(args[8]);
+								SETTINGS.ptsPerRobot = Integer.parseInt(args[9]);
+								SETTINGS.ptsPerPlayer = Integer.parseInt(args[10]);
 								Log.e("Login", "Received: " +Integer.parseInt(args[4]));
 								if(!ips[0].equals("none")){
 									for(String p:ips){

@@ -60,7 +60,7 @@ public class Bomb implements Sprite {
 		Map map = gameView.getMap();
 		Sprite[][] mapMatrix = map.getMapMatrix();
 		int score = propagateExplosion(map, mapMatrix);
-		if(bombOwner.isAlive)
+		if(bombOwner.isAlive && !bombOwner.isPaused)
 			bombOwner.updateScore(score);
 	}
 
@@ -75,8 +75,8 @@ public class Bomb implements Sprite {
 				if(adjObj instanceof Wall){
 					break;
 				}else{
-					if(map.myPlayer.getMatrixX()==posNextMatrixX && map.myPlayer.getMatrixY()==posNextMatrixY && map.myPlayer.isAlive){
-						if(bombOwner != map.myPlayer && bombOwner.isAlive){
+					if(map.myPlayer.getMatrixX()==posNextMatrixX && map.myPlayer.getMatrixY()==posNextMatrixY && map.myPlayer.isAlive && !map.myPlayer.isPaused){
+						if(bombOwner != map.myPlayer && bombOwner.isAlive && !bombOwner.isPaused){
 							bombOwner.updateScore(map.myPlayer.getLoot());
 							new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"giveLoot:" + bombOwner.id+","+ map.myPlayer.getLoot() ,"giveLoot");
 							Log.w("SCORE","Morri vou dar pontuacao a quem me matou");

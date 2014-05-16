@@ -24,4 +24,12 @@ public enum DIRECTION {
 	public static DIRECTION randomDir()  {
 		return VALUES.get(RANDOM.nextInt(SIZE));
 	}
+	
+	public static DIRECTION getDirection(int dirX, int dirY) {
+		for(DIRECTION dir:DIRECTION.values()){
+			if(dirX == dir.x && dirY==dir.y)
+				return dir;
+		}
+		return null;
+	}
 }

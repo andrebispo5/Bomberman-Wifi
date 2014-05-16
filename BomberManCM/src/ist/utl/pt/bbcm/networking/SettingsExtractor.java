@@ -22,4 +22,9 @@ public class SettingsExtractor implements Serializable{
 							+ptsPerRobot+","+ptsPerPlayer;
 		return message;
 	}
+	public String getWDSimMessage() {
+		String message = bombTimer+","+explosionRange+","+explosionDuration+","
+						+robotSpeed+","+ptsPerRobot+","+ptsPerPlayer;
+		return message;
+	}
 }

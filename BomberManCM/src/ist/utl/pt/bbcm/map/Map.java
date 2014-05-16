@@ -327,16 +327,34 @@ public class Map {
 		return y;
 	}
 	
-	public void killPlayer(){
-		if(myPlayer.isAlive){
-			myPlayer.kill();
-			new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerDied:" + myPlayer.id + "," + myPlayer.getScore() ,"died");
-		}else{
-			myPlayer.spawn();
-			new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerResume:" + myPlayer.id ,"died");
+	public void pausePlayer(String id){
+		Player p = getPlayerWithId(id);
+		if(p.isAlive){
+			if(p.isPaused){
+				p.spawn();
+				if(p.equals(myPlayer))
+					new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerResume:" + p.id ,"died");
+			}else{
+				p.pause();
+				if(p.equals(myPlayer))
+					new ClientConnectorTask(appCtx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerPaused:" + p.id ,"paused");
+			}
 		}
 	}
 	
+	private Player getPlayerWithId(String id) {
+		if(id.equals("p1")){
+			return player1;
+		}else if(id.equals("p2")){
+			return player2;
+		}else if(id.equals("p3")){
+			return player3;
+		}else if(id.equals("p4")){
+			return player4;
+		}
+		return null;
+	}
+
 	public Player getPlayer1(){
 		return player1;
 	}
@@ -376,28 +394,17 @@ public class Map {
 			String[] playerArgs = s.split(",");
 			int dirX = Integer.parseInt(playerArgs[1]);
 			int dirY = Integer.parseInt(playerArgs[2]);
-			DIRECTION direction = null;
-			for(DIRECTION dir:DIRECTION.values()){
-				if(dirX == dir.x && dirY==dir.y)
-					direction = dir;
-			}
-			if(playerArgs[0].equals("p1")){
-				Log.w("D: PlayerUpdate","Moving Player1. . . .");
-				player1.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
-			}else if(playerArgs[0].equals("p2")){
-				Log.w("D: PlayerUpdate","Moving Player2. . . .");
-				player2.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
-			}else if(playerArgs[0].equals("p3")){
-				Log.w("D: PlayerUpdate","Moving Player3. . . .");
-				player3.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
-			}else if(playerArgs[0].equals("p4")){
-				Log.w("D: PlayerUpdate","Moving Player4. . . .");
-				player4.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
-			}else{
+			DIRECTION direction = DIRECTION.getDirection(dirX, dirY);
+			try{
+				String id = playerArgs[0];
+				Player p = getPlayerWithId(id);
+				p.updateMultiplayerPos(direction, playerArgs[3],playerArgs[4]);
+			}catch (NullPointerException e){
 				Log.w("D: PlayerUpdate"," No player found!!!!!!!!");
 			}
 		}
 	}
+
 
 	public void killPlayer(String inputReceived) {
 		String[] args = inputReceived.split(",");

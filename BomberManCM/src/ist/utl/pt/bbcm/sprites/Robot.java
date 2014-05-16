@@ -65,7 +65,7 @@ public class Robot implements Sprite , Killable, Moveable{
 			int playerX = map.myPlayer.getMatrixX();
 			int playerY = map.myPlayer.getMatrixY();
 			
-			if(posMatrixX == playerX && posMatrixY == playerY && map.myPlayer.isAlive){
+			if(posMatrixX == playerX && posMatrixY == playerY && map.myPlayer.isAlive && !map.myPlayer.isPaused){
 				map.myPlayer.kill();
 				if(SETTINGS.mode == MODE.MLP || SETTINGS.mode == MODE.WDS)
 					new ClientConnectorTask((ApplicationContext)gameView.mainActivityContext.getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"playerDied:" + map.myPlayer.id + "," + map.myPlayer.getScore() ,"died");
